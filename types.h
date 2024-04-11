@@ -6,11 +6,11 @@
 #include "./data_structure/stack.h"
 
   #ifndef true
-    #define true 1;
+    #define true 1
   #endif
 
   #ifndef false
-    #define false 0;
+    #define false 0
   #endif
 
   #define ROWS    8
@@ -21,24 +21,24 @@
   #define KNIGHT  3
   #define ROOK    5
   #define QUEEN   9
-  #define _FREE_ -1 
+  #define _FREE_  -1
 
 
   //black pieces struct definition
-  #define BLACK_PAWN    {.ptype = p, .pcolor = black}
-  #define BLACK_BISHOP  {.ptype = b, .pcolor = black}
-  #define BLACK_KNIGHT  {.ptype = n, .pcolor = black}
-  #define BLACK_ROOK    {.ptype = r, .pcolor = black}
-  #define BLACK_QUEEN   {.ptype = q, .pcolor = black}
-  #define BLACK_KING    {.ptype = k, .pcolor = black}
+  #define BLACK_PAWN    ((piece){.ptype = p, .pcolor = black})
+  #define BLACK_BISHOP  ((piece){.ptype = b, .pcolor = black})
+  #define BLACK_KNIGHT  ((piece){.ptype = n, .pcolor = black})
+  #define BLACK_ROOK    ((piece){.ptype = r, .pcolor = black})
+  #define BLACK_QUEEN   ((piece){.ptype = q, .pcolor = black})
+  #define BLACK_KING    ((piece){.ptype = k, .pcolor = black})
 
   //white pieces struct definition
-  #define WHITE_PAWN    {.ptype = p, .pcolor = white}
-  #define WHITE_BISHOP  {.ptype = b, .pcolor = white}
-  #define WHITE_KNIGHT  {.ptype = n, .pcolor = white}
-  #define WHITE_ROOK    {.ptype = r, .pcolor = white}
-  #define WHITE_QUEEN   {.ptype = q, .pcolor = white}
-  #define WHITE_KING    {.ptype = k, .pcolor = white}
+  #define WHITE_PAWN    ((piece){.ptype = p, .pcolor = white})
+  #define WHITE_BISHOP  ((piece){.ptype = b, .pcolor = white})
+  #define WHITE_KNIGHT  ((piece){.ptype = n, .pcolor = white})
+  #define WHITE_ROOK    ((piece){.ptype = r, .pcolor = white})
+  #define WHITE_QUEEN   ((piece){.ptype = q, .pcolor = white})
+  #define WHITE_KING    ((piece){.ptype = k, .pcolor = white})
 
   #define FREE_CELL     ((piece){.ptype = no_type, .pcolor = no_color})
 
@@ -49,10 +49,10 @@
 
     signed char c ; // COLUMN
 
-  }cell ;
+  } cell;
 
   enum type{
-    k,
+    k       = 2,
     p       = PAWN, 
     n       = KNIGHT, 
     b       = BISHOP, 
@@ -97,19 +97,19 @@
 
   } boardInfo;
 
-  typedef struct {
+  typedef struct _mlist{
       
       move move_;
   
-      struct mlist * next;
+      struct _mlist * next;
       
   } mlist;
 
-  typedef struct{
+  typedef struct _plist{
 
     piece piece_;
 
-    struct plist * next;
+    struct _plist * next;
 
   } plist;
 

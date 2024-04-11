@@ -1,5 +1,5 @@
 #include "./board.h"
-#include <stdio.h>
+#include "types.h"
 
 int main(){
 
@@ -7,14 +7,17 @@ int main(){
 
   INIT_BOARD(board);
 
-  move move_ = {.mpiece = board[0][0].ptype, .from = { 0 , 0 }, .to = { 0 , 0 }};
+  move move_ = {.mpiece = board[0][0], .from = { 0 , 0 }, .to = { 2 , 2}};
 
-  boardInfo x = extractBoardInfo(&board);
+  // do_move(board, move_);
 
-  do_move(&board, move_);
+  boardInfo x = extractBoardInfo(board);
 
-  printf("%d",board[0][0].ptype);
+  //push2stack(x.moves, &move_, sizeof(move));
 
+  printb(board);
+
+  
   return 0;
 
 }

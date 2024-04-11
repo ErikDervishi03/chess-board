@@ -5,13 +5,8 @@
 
 // idea create a bit mask in order to check wich error is active 
 
-int isOutOfBounds(int row, int col) {
-    return (row < 0 || row >= ROWS || col < 0 || col >= COLUMNS);
-}
+int isOutOfBounds(int row, int col);
 
-int isLegalMove ( BOARD * board , move move_) {
-
-    return !isOutOfBounds(move_.to.r, move_.to.c) ;
-}
+int isLegalMove ( BOARD board , move move_);
 
 #endif // __VALID_H__
