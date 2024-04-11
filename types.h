@@ -89,9 +89,9 @@
 
   typedef struct {
       
-      piece * whitePieces;
+      List * whitePieces;
 
-      piece * blackPieces;
+      List * blackPieces;
 
       stack * moves;
 

@@ -9,6 +9,8 @@ int main(){
 
   move move_ = {.mpiece = board[0][0].ptype, .from = { 0 , 0 }, .to = { 0 , 0 }};
 
+  boardInfo x = extractBoardInfo(&board);
+
   do_move(&board, move_);
 
   printf("%d",board[0][0].ptype);

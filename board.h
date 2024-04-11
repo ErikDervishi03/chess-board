@@ -32,15 +32,19 @@ boardInfo extractBoardInfo ( BOARD * board ){
 
         boardInfo * info = (boardInfo *) malloc(sizeof(boardInfo));
 
+        info->whitePieces = create_list();
+        info->blackPieces = create_list();
+        init_stack(info->moves);
+
         for (int i = 0; i < ROWS; i++){
 
                 for (int j = 0; j < COLUMNS; j++){
 
-                        if (board[i][j].pcolor == white){
+                        if (board[i][j]->pcolor == white){
 
                                 add_to_list( info->whitePieces , &board[i][j] );
 
-                        }else if (board[i][j].pcolor == black){
+                        }else if (board[i][j]->pcolor == black){
 
                                 add_to_list( info->blackPieces , &board[i][j] );
 
@@ -52,7 +56,7 @@ boardInfo extractBoardInfo ( BOARD * board ){
 
         init_stack ( info->moves );
 
-        return info;
+        return *info;
 
 }
 
