@@ -9,6 +9,8 @@
         TO DO: 
                 move (BOARD, PIECE, POSITION)
 
+        move --> piece move from a loc to another loc.
+
 */
 
 
@@ -25,7 +27,19 @@ const BOARD DEFAULT_BOARD = {
         {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK}
 };
 
-void move ( BOARD * board , piece piece_ , cell from , cell to );
+int isLegalMove( BOARD * board , move move_ ){
+        return true;
+}
+
+void do_move ( BOARD * board , move move_ ){
+
+        if( isLegalMove( board , move_ ) ){
+
+                memcpy(&board[move_.from.r][move_.from.c], &FREE_CELL, sizeof(piece));
+
+        }
+
+}
 
 
 #endif

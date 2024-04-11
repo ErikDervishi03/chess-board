@@ -8,7 +8,11 @@ int main(){
 
   INIT_BOARD(board);
 
-  printf("%d",board[3][3].ptype);
+  move move_ = {.mpiece = board[0][0].ptype, .from = { 0 , 0 }, .to = { 0 , 0 }};
+
+  do_move(&board, move_);
+
+  printf("%d",board[0][0].ptype);
 
   return 0;
 

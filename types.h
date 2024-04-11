@@ -2,6 +2,14 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+  #ifndef true
+    #define true 1;
+  #endif
+
+  #ifndef false
+    #define false 0;
+  #endif
+
   #define ROWS 8
   #define COLUMNS 8
 
@@ -29,7 +37,8 @@
   #define WHITE_QUEEN   {.ptype = q, .pcolor = white}
   #define WHITE_KING    {.ptype = k, .pcolor = white}
 
-  #define FREE_CELL     {.ptype = no_type, .pcolor = no_color}
+  #define FREE_CELL     ((piece){.ptype = no_type, .pcolor = no_color})
+
 
   typedef struct{
 
@@ -41,11 +50,11 @@
 
   enum type{
     k,
-    p = PAWN, 
-    n = KNIGHT, 
-    b = BISHOP, 
-    r = ROOK, 
-    q = QUEEN,
+    p       = PAWN, 
+    n       = KNIGHT, 
+    b       = BISHOP, 
+    r       = ROOK, 
+    q       = QUEEN,
     no_type = _FREE_
   };
 
@@ -59,11 +68,21 @@
 
   typedef struct{
 
-    enum type ptype;
+    enum type  ptype;
 
     enum color pcolor;
 
   } piece;
+
+  typedef struct {
+
+    piece mpiece;
+
+    cell  from;
+
+    cell  to;
+
+  } move;
 
   typedef piece BOARD[ROWS][COLUMNS];
 
