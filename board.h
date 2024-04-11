@@ -1,8 +1,9 @@
 #ifndef __TABLE_H__
 #define __TABLE_H__
 
-#include "types.h"
-#include <string.h>
+#include "string.h"
+#include "./types.h"
+#include "./valid.h"
 
 /*
 
@@ -27,9 +28,34 @@ const BOARD DEFAULT_BOARD = {
         {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK}
 };
 
-int isLegalMove( BOARD * board , move move_ ){
-        return true;
+boardInfo extractBoardInfo ( BOARD * board ){
+
+        boardInfo * info = (boardInfo *) malloc(sizeof(boardInfo));
+
+        for (int i = 0; i < ROWS; i++){
+
+                for (int j = 0; j < COLUMNS; j++){
+
+                        if (board[i][j].pcolor == white){
+
+                                add_to_list( info->whitePieces , &board[i][j] );
+
+                        }else if (board[i][j].pcolor == black){
+
+                                add_to_list( info->blackPieces , &board[i][j] );
+
+                        }
+
+                }
+
+        }
+
+        init_stack ( info->moves );
+
+        return info;
+
 }
+
 
 void do_move ( BOARD * board , move move_ ){
 
@@ -37,9 +63,13 @@ void do_move ( BOARD * board , move move_ ){
 
                 memcpy(&board[move_.from.r][move_.from.c], &FREE_CELL, sizeof(piece));
 
+                memcpy(&board[move_.to.r][move_.to.c], &move_.mpiece, sizeof(piece));
+
         }
 
 }
+
+
 
 
 #endif

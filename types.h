@@ -2,6 +2,9 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#include "./data_structure/listc.h"
+#include "./data_structure/stack.h"
+
   #ifndef true
     #define true 1;
   #endif
@@ -10,14 +13,14 @@
     #define false 0;
   #endif
 
-  #define ROWS 8
+  #define ROWS    8
   #define COLUMNS 8
 
-  #define PAWN 1
-  #define BISHOP 3
-  #define KNIGHT 3
-  #define ROOK 5
-  #define QUEEN 9
+  #define PAWN    1
+  #define BISHOP  3
+  #define KNIGHT  3
+  #define ROOK    5
+  #define QUEEN   9
   #define _FREE_ -1 
 
 
@@ -83,6 +86,32 @@
     cell  to;
 
   } move;
+
+  typedef struct {
+      
+      piece * whitePieces;
+
+      piece * blackPieces;
+
+      stack * moves;
+
+  } boardInfo;
+
+  typedef struct {
+      
+      move move_;
+  
+      struct mlist * next;
+      
+  } mlist;
+
+  typedef struct{
+
+    piece piece_;
+
+    struct plist * next;
+
+  } plist;
 
   typedef piece BOARD[ROWS][COLUMNS];
 
