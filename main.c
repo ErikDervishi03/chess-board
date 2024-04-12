@@ -7,7 +7,7 @@ int main(){
 
   INIT_BOARD(board);
 
-  move move_ = {.mpiece = board[0][0], .from = { 0 , 0 }, .to = { 2 , 2}};
+  move move_ = { 2 , 2};
 
   // do_move(board, move_);
 

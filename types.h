@@ -43,6 +43,9 @@
   #define FREE_CELL     ((piece){.ptype = no_type, .pcolor = no_color})
 
 
+  #define WHITE_PAWN_INITIAL_ROW 1
+  #define BLACK_PAWN_INITIAL_ROW 6
+
   typedef struct{
 
     signed char r ; // ROW
@@ -50,6 +53,8 @@
     signed char c ; // COLUMN
 
   } cell;
+
+  typedef cell move;
 
   enum type{
     k       = 2,
@@ -78,16 +83,6 @@
   } piece;
 
   typedef struct {
-
-    piece mpiece;
-
-    cell  from;
-
-    cell  to;
-
-  } move;
-
-  typedef struct {
       
       List * whitePieces;
 
@@ -97,21 +92,9 @@
 
   } boardInfo;
 
-  typedef struct _mlist{
-      
-      move move_;
-  
-      struct _mlist * next;
-      
-  } mlist;
+  typedef List mlist; // move list
 
-  typedef struct _plist{
-
-    piece piece_;
-
-    struct _plist * next;
-
-  } plist;
+  typedef List plist; // piece list
 
   typedef piece BOARD[ROWS][COLUMNS];
 
