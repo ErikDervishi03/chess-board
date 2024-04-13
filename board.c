@@ -1,5 +1,6 @@
 #include "board.h"
 #include "types.h"
+#include "valid.h"
 #include <stdio.h>
 
 const BOARD DEFAULT_BOARD = {
@@ -10,8 +11,9 @@ const BOARD DEFAULT_BOARD = {
         {FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL,   FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL},
         {FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL,   FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL},
         {FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL,   FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL},
-        {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK},
-        {BLACK_PAWN, BLACK_PAWN,   BLACK_PAWN,   BLACK_PAWN,  BLACK_PAWN, BLACK_PAWN,   BLACK_PAWN,   BLACK_PAWN}
+        {BLACK_PAWN, BLACK_PAWN,   BLACK_PAWN,   BLACK_PAWN,  BLACK_PAWN, BLACK_PAWN,   BLACK_PAWN,   BLACK_PAWN},
+        {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK}
+        
 
 };
 
@@ -47,13 +49,13 @@ boardInfo extractBoardInfo ( BOARD board ){
 
 }
 
-void do_move ( BOARD board , move move_ ){
+void do_move ( BOARD board , move from, move to ){
 
-        if( isLegalMove( board , move_ ) ){
+        if( isLegalMove( board , to ) ){
 
-                board[move_.r][move_.c] = board[move_.r][move_.c];
+                board[to.r][to.c] = board[from.r][from.c];
 
-                board[move_.r][move_.c] = FREE_CELL;
+                board[from.r][from.c] = FREE_CELL;
 
         }
 
@@ -64,8 +66,11 @@ void printb (BOARD board) {
 
                 for (int j = 0; j < COLUMNS; j++){
 
-                        printf("%d ", board[i][j].ptype);
-
+                        if(pieceCMP(board[i][j], FREE_CELL)){
+                                printf("0 ");
+                        }else{
+                                printf("%d ", board[i][j].ptype);
+                        }
                 }
                 printf("\n");
 

@@ -48,9 +48,9 @@
 
   typedef struct{
 
-    signed char r ; // ROW
+    int r ; // ROW
 
-    signed char c ; // COLUMN
+    int c ; // COLUMN
 
   } cell;
 

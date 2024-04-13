@@ -1,5 +1,8 @@
 #include "./board.h"
+#include "data_structure/listc.h"
 #include "types.h"
+#include "valid.h"
+#include <stdio.h>
 
 int main(){
 
@@ -7,16 +10,20 @@ int main(){
 
   INIT_BOARD(board);
 
-  move move_ = { 2 , 2};
+  do_move(board, (move){7,0}, (move){2,0});
 
-  // do_move(board, move_);
+  Node * tmp = pawnLegalMoves(board, (cell){1, 1})->head;
 
-  boardInfo x = extractBoardInfo(board);
+  printf("mosse legali\n");
 
-  //push2stack(x.moves, &move_, sizeof(move));
+  
+  while(tmp){
+
+    printf ("%d %d\n", (*(move *)tmp->data).r ,(*(move *)tmp->data).c);
+    tmp = tmp->next;
+  }
 
   printb(board);
-
   
   return 0;
 

@@ -22,7 +22,7 @@ extern const BOARD DEFAULT_BOARD ;
 
 boardInfo extractBoardInfo ( BOARD board );
 
-void do_move ( BOARD board , move move_ );
+void do_move ( BOARD board , move from, move to );
 
 void printb (BOARD board);
 

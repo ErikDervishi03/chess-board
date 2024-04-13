@@ -2,6 +2,12 @@
 #include "data_structure/listc.h"
 #include "types.h"
 
+
+#define areOppositeColor(color1, color2) \
+        ((color1 == white && color2 == black) || \
+        (color1 == black && color2 == white))
+
+
 int pieceCMP ( piece piece1, piece piece2 ){
     return ((piece1.pcolor == piece2.pcolor) && (piece1.ptype == piece2.ptype));
 }
@@ -15,25 +21,54 @@ int isLegalMove ( BOARD board , move move_) {
     return !isOutOfBounds(move_) ;
 }
 
-mlist * pawnLegalMoves ( BOARD board, cell currPos ) {
+List * pawnLegalMoves (BOARD board, cell currPos) {
+    piece currPawn = board[currPos.r][currPos.c];
+    List * legalMoves = create_list();
+    int inc = (currPawn.pcolor == white) ? 1 : -1;
 
-    piece currPawn = board [currPos.r][currPos.c];
+    // 1 square ahead move
+    if (!isOutOfBounds((move){currPos.r + inc, currPos.c}) &&
+        pieceCMP(board[currPos.r + inc][currPos.c], FREE_CELL)) {
+        move* new_move = malloc(sizeof(move));
+        if (new_move) {
+            new_move->r = currPos.r + inc;
+            new_move->c = currPos.c;
+            add_to_list(legalMoves, new_move);
+        }
+    }
 
-    mlist * legalMoves = create_list();
+    // 2 squares ahead in the first move
+    int pawnInitialRow = (currPawn.pcolor == white) ? WHITE_PAWN_INITIAL_ROW : BLACK_PAWN_INITIAL_ROW;
+    if (currPos.r == pawnInitialRow && pieceCMP(board[currPos.r + 2 * inc][currPos.c], FREE_CELL)) {
+        move* new_move = malloc(sizeof(move));
+        if (new_move) {
+            new_move->r = currPos.r + 2 * inc;
+            new_move->c = currPos.c;
+            add_to_list(legalMoves, new_move);
+        }
+    }
 
-    if ( currPawn.pcolor == white ){
-        move nextPos = {.r = currPos.r - 1, .c = currPos.c};
+    // Left diagonal eat
+    if (!isOutOfBounds((move){currPos.r + inc, currPos.c - 1}) &&
+        areOppositeColor(board[currPos.r + inc][currPos.c - 1].pcolor, currPawn.pcolor)) {
+        move* new_move = malloc(sizeof(move));
+        if (new_move) {
+            new_move->r = currPos.r + inc;
+            new_move->c = currPos.c - 1;
+            add_to_list(legalMoves, new_move);
+        }
+    }
 
-        if (!isOutOfBounds(nextPos) && pieceCMP(board[nextPos.r][nextPos.c] , FREE_CELL)) {
-
-            add_to_list(legalMoves, &nextPos); // 1 square ahead move
-
-            if ( currPos.r == WHITE_PAWN_INITIAL_ROW && pieceCMP(board[nextPos.r - 2][nextPos.c] , FREE_CELL)) {
-                add_to_list(legalMoves, &(move){currPos.r - 2, currPos.c});
-            }
+    // Right diagonal eat
+    if (!isOutOfBounds((move){currPos.r + inc, currPos.c + 1}) &&
+        areOppositeColor(board[currPos.r + inc][currPos.c + 1].pcolor, currPawn.pcolor)) {
+        move* new_move = malloc(sizeof(move));
+        if (new_move) {
+            new_move->r = currPos.r + inc;
+            new_move->c = currPos.c + 1;
+            add_to_list(legalMoves, new_move);
         }
     }
 
     return legalMoves;
-
 }
