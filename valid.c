@@ -1,6 +1,7 @@
 #include "valid.h"
 #include "data_structure/listc.h"
 #include "types.h"
+#include <stdio.h>
 
 
 #define areOppositeColor(color1, color2) \
@@ -67,6 +68,36 @@ List * pawnLegalMoves (BOARD board, cell currPos) {
             new_move->r = currPos.r + inc;
             new_move->c = currPos.c + 1;
             add_to_list(legalMoves, new_move);
+        }
+    }
+
+    return legalMoves;
+}
+
+List * knightLegalMoves(BOARD board, cell currPos) {
+    List * legalMoves = create_list();
+    piece currKnight = board[currPos.r][currPos.c];
+
+    // Possible offsets for knight moves
+    const int rowOffsets[] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+    const int colOffsets[] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+    const int numMoves = 8;
+
+    // Check each possible move
+    for (int i = 0; i < numMoves; ++i) {
+        int newRow = currPos.r + rowOffsets[i];
+        int newCol = currPos.c + colOffsets[i];
+
+        printf("%d %d\n", newRow, newCol);
+
+        if (!isOutOfBounds((move){newRow, newCol}) && 
+            board[newRow][newCol].pcolor != currKnight.pcolor) {
+            move* new_move = malloc(sizeof(move));
+            if (new_move) {
+                new_move->r = newRow;
+                new_move->c = newCol;
+                add_to_list(legalMoves, new_move);
+            }
         }
     }
 

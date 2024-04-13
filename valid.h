@@ -14,4 +14,6 @@ int isLegalMove ( BOARD board , move move_);
 
 List * pawnLegalMoves ( BOARD board, cell currPos );
 
+List * knightLegalMoves ( BOARD board , cell currPos );
+
 #endif // __VALID_H__
