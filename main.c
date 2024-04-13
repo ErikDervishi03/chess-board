@@ -10,7 +10,7 @@ int main(){
 
   INIT_BOARD(board);
 
-  Node * tmp = knightLegalMoves(board, (cell){3, 3})->head;
+  Node * tmp = bishopLegalMoves(board, (cell){3, 3})->head;
 
   printf("mosse legali\n");
 

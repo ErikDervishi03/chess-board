@@ -16,4 +16,6 @@ List * pawnLegalMoves ( BOARD board, cell currPos );
 
 List * knightLegalMoves ( BOARD board , cell currPos );
 
+List * bishopLegalMoves ( BOARD board , cell currPos );
+
 #endif // __VALID_H__
