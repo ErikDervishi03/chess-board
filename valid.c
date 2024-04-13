@@ -17,7 +17,7 @@ int isOutOfBounds(cell pos) {
     return (pos.r < 0 || pos.r >= ROWS || pos.c < 0 || pos.c >= COLUMNS);
 }
 
-int isLegalMove ( BOARD board , move move_) {
+int isLegalMove ( move move_) {
 
     return !isOutOfBounds(move_) ;
 }
@@ -214,4 +214,32 @@ List * rookLegalMoves(BOARD board, cell currPos) {
 
 List * queenLegalMoves (BOARD board, cell currPos){
     return  merge_lists(bishopLegalMoves(board,currPos), rookLegalMoves(board, currPos));
+}
+
+List * kingLegalMoves (BOARD board, cell currPos){
+    List * legalMoves = create_list();
+
+    // Possible offsets for king moves
+    const int posOffsets[] = { -1, 0, 1};
+    const int numMoves = 3;
+    int newRow;
+    int newCol;
+
+    // Check each possible move
+    for (short int i = 0; i < numMoves; ++i) {
+        for(short int j = 0; j < numMoves; j++){
+            if( i == 1 && j == 1) continue;
+            newRow = currPos.r + posOffsets[i];
+            newCol = currPos.c + posOffsets[j];
+            printf("attempt");
+            if (!isOutOfBounds((move){newRow, newCol}) && 
+                pieceCMP(board[currPos.r][currPos.c], FREE_CELL)) {
+                printf("Success");
+                add_new_move(legalMoves, (move){newRow, newCol});
+
+            }
+        }
+    }
+
+    return legalMoves;
 }
