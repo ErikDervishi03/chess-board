@@ -29,4 +29,6 @@ void* remove_from_list(List* list);
  
 void free_list(List* list);
 
+List * merge_lists (List * dest, List * src);
+
 #endif // __LISTC_H__

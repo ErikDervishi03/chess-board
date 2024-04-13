@@ -88,7 +88,7 @@ List * knightLegalMoves(BOARD board, cell currPos) {
     int newCol;
 
     // Check each possible move
-    for (int i = 0; i < numMoves; ++i) {
+    for (short int i = 0; i < numMoves; ++i) {
         newRow = currPos.r + rowOffsets[i];
         newCol = currPos.c + colOffsets[i];
 
@@ -141,22 +141,77 @@ List * bishopLegalMoves(BOARD board, cell currPos) {
         }else { // same color
             break;
         }
-            
-        
     }
 
     for (short i = currPos.c + 1, j = currPos.r + 1; i < COLUMNS && j < ROWS; ++i, ++j) { // lower right diagonal
-        if (board[j][i].ptype == no_type) {
+        if (pieceCMP(board[j][i], FREE_CELL)) {
             add_new_move(legalMoves, (move){j, i});
         } else if (areOppositeColor(board[j][i].pcolor, currBishop.pcolor)) {
             add_new_move(legalMoves, (move){j, i});
             break;
         } else{// same color
             break;
-        }
-            
+        }   
     }
     
+    return legalMoves;
+}
+
+List * rookLegalMoves(BOARD board, cell currPos) {
+    List * legalMoves = create_list();
+    const piece currRook = board[currPos.r][currPos.c];
+
+    // Check moves to the left
+    for (short i = currPos.c - 1; i >= 0; --i) {
+        if (pieceCMP(board[currPos.r][i], FREE_CELL)) {
+            add_new_move(legalMoves, (move){currPos.r, i});
+        } else if (areOppositeColor(board[currPos.r][i].pcolor, currRook.pcolor)) {
+            add_new_move(legalMoves, (move){currPos.r, i});
+            break;
+        } else { // same color
+            break;
+        }
+    }
+
+    // Check moves to the right
+    for (short i = currPos.c + 1; i < COLUMNS; ++i) {
+        if (pieceCMP(board[currPos.r][i], FREE_CELL)) {
+            add_new_move(legalMoves, (move){currPos.r, i});
+        } else if (areOppositeColor(board[currPos.r][i].pcolor, currRook.pcolor)) {
+            add_new_move(legalMoves, (move){currPos.r, i});
+            break;
+        } else { // same color
+            break;
+        }
+    }
+
+    // Check moves upwards
+    for (short j = currPos.r - 1; j >= 0; --j) {
+        if (pieceCMP(board[j][currPos.c], FREE_CELL)) {
+            add_new_move(legalMoves, (move){j, currPos.c});
+        } else if (areOppositeColor(board[j][currPos.c].pcolor, currRook.pcolor)) {
+            add_new_move(legalMoves, (move){j, currPos.c});
+            break;
+        } else { // same color
+            break;
+        }
+    }
+
+    // Check moves downwards
+    for (short j = currPos.r + 1; j < ROWS; ++j) {
+        if (pieceCMP(board[j][currPos.c], FREE_CELL)) {
+            add_new_move(legalMoves, (move){j, currPos.c});
+        } else if (areOppositeColor(board[j][currPos.c].pcolor, currRook.pcolor)) {
+            add_new_move(legalMoves, (move){j, currPos.c});
+            break;
+        } else { // same color
+            break;
+        }
+    }
 
     return legalMoves;
+}
+
+List * queenLegalMoves (BOARD board, cell currPos){
+    return  merge_lists(bishopLegalMoves(board,currPos), rookLegalMoves(board, currPos));
 }

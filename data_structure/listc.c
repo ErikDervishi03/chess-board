@@ -36,3 +36,37 @@ void free_list(List* list) {
     }
     free(list);
 }
+
+List * merge_lists(List * dest, List * src) {
+    if (src == NULL || src->size == 0) {
+        // Nothing to merge
+        return dest;
+    }
+    
+    if (dest == NULL) {
+        // If the destination list is NULL, create a new list
+        dest = create_list();
+    }
+
+    if (dest->size == 0) {
+        // If the destination list is empty, set its head to the head of the source list
+        dest->head = src->head;
+    } else {
+        // Otherwise, find the last node of the destination list
+        Node *last_node = dest->head;
+        while (last_node->next != NULL) {
+            last_node = last_node->next;
+        }
+        // Append the head of the source list to the last node of the destination list
+        last_node->next = src->head;
+    }
+
+    // Update the size of the destination list
+    dest->size += src->size;
+
+    // Free the source list structure, but not its nodes
+    free(src);
+
+    // Return the merged destination list
+    return dest;
+}
