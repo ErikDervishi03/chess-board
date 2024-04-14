@@ -1,23 +1,19 @@
 #include "valid.h"
+#include "board.h"
 #include "data_structure/listc.h"
 #include "types.h"
-#include <stdio.h>
 
 
-#define areOppositeColor(color1, color2) \
-        ((color1 == white && color2 == black) || \
-        (color1 == black && color2 == white))
+#define areOppositeColor(piece1, piece2) \
+        ((isWhite(piece1) && isBlack(piece2)) || \
+        (isWhite(piece2) && isBlack(piece1)))
 
-
-int pieceCMP ( piece piece1, piece piece2 ){
-    return ((piece1.pcolor == piece2.pcolor) && (piece1.ptype == piece2.ptype));
-}
 
 int isOutOfBounds(cell pos) {
     return (pos.r < 0 || pos.r >= ROWS || pos.c < 0 || pos.c >= COLUMNS);
 }
 
-int isLegalMove ( move move_) {
+int isLegalMove ( move move_ ) {
 
     return !isOutOfBounds(move_) ;
 }
@@ -33,23 +29,23 @@ void add_new_move (List * dest, move src){
 
 List * pawnLegalMoves(BOARD board, cell currPos) {
     List * legalMoves = create_list();
-    const piece currPawn = board[currPos.r][currPos.c];
-    const int inc = (currPawn.pcolor == white) ? 1 : -1;
+    const enum piece currPawn = board[currPos.r][currPos.c];
+    const int inc = isWhite(currPawn) ? 1 : -1;
 
     // 1 square ahead move
     move forwardOne = {currPos.r + inc, currPos.c};
     if (!isOutOfBounds(forwardOne) && 
-        pieceCMP(board[forwardOne.r][forwardOne.c], FREE_CELL)) {
+        board[forwardOne.r][forwardOne.c] == EMPTY) {
 
         add_new_move(legalMoves, forwardOne);
 
     }
 
     // 2 squares ahead in the first move
-    int pawnInitialRow = (currPawn.pcolor == white) ? WHITE_PAWN_INITIAL_ROW : BLACK_PAWN_INITIAL_ROW;
+    int pawnInitialRow = isWhite(currPawn) ? WHITE_PAWN_INITIAL_ROW : BLACK_PAWN_INITIAL_ROW;
     move forwardTwo = {currPos.r + 2 * inc, currPos.c};
     if (currPos.r == pawnInitialRow && !isOutOfBounds(forwardTwo) && 
-        pieceCMP(board[forwardTwo.r][forwardTwo.c], FREE_CELL)) {
+        board[forwardTwo.r][forwardTwo.c] == EMPTY) {
 
         add_new_move(legalMoves, forwardTwo);
 
@@ -58,7 +54,7 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
     // Left diagonal eat
     move leftDiagonal = {currPos.r + inc, currPos.c - 1};
     if (!isOutOfBounds(leftDiagonal) && 
-        areOppositeColor(board[leftDiagonal.r][leftDiagonal.c].pcolor, currPawn.pcolor)) {
+        areOppositeColor(board[leftDiagonal.r][leftDiagonal.c], currPawn)) {
 
         add_new_move(legalMoves, leftDiagonal);
 
@@ -68,7 +64,7 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
     // Right diagonal eat
     move rightDiagonal = {currPos.r + inc, currPos.c + 1};
     if (!isOutOfBounds(rightDiagonal) && 
-        areOppositeColor(board[rightDiagonal.r][rightDiagonal.c].pcolor, currPawn.pcolor)) {
+        areOppositeColor(board[rightDiagonal.r][rightDiagonal.c], currPawn)) {
         add_new_move(legalMoves, rightDiagonal);
     }
 
@@ -78,7 +74,7 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
 
 List * knightLegalMoves(BOARD board, cell currPos) {
     List * legalMoves = create_list();
-    const piece currKnight = board[currPos.r][currPos.c];
+    const enum piece currKnight = board[currPos.r][currPos.c];
 
     // Possible offsets for knight moves
     const int rowOffsets[] = { 2, 1, -1, -2, -2, -1, 1, 2 };
@@ -93,7 +89,7 @@ List * knightLegalMoves(BOARD board, cell currPos) {
         newCol = currPos.c + colOffsets[i];
 
         if (!isOutOfBounds((move){newRow, newCol}) && 
-            board[newRow][newCol].pcolor != currKnight.pcolor) {
+            board[newRow][newCol] != currKnight) {
 
             add_new_move(legalMoves, (move){newRow, newCol});
 
@@ -105,12 +101,12 @@ List * knightLegalMoves(BOARD board, cell currPos) {
 
 List * bishopLegalMoves(BOARD board, cell currPos) {
     List * legalMoves = create_list();
-    const piece currBishop = board[currPos.r][currPos.c];
+    const enum piece currBishop = board[currPos.r][currPos.c];
 
     for (short i = currPos.c - 1, j = currPos.r - 1; i >= 0 && j >= 0; --i, --j) { // upper left diagonal
-        if (pieceCMP(board[j][i], FREE_CELL)) {
+        if (board[j][i] == EMPTY) {
             add_new_move(legalMoves, (move){j, i});
-        } else if (areOppositeColor(board[j][i].pcolor, currBishop.pcolor)) {
+        } else if (areOppositeColor(board[j][i], currBishop)) {
             add_new_move(legalMoves, (move){j, i});
             break;
         }else {// same color
@@ -119,9 +115,9 @@ List * bishopLegalMoves(BOARD board, cell currPos) {
     }
 
     for (short i = currPos.c - 1, j = currPos.r + 1; i >= 0 && j < ROWS; --i, ++j) { // lower left diagonal
-        if (pieceCMP(board[j][i], FREE_CELL)) {
+        if (board[j][i] == EMPTY) {
             add_new_move(legalMoves, (move){j, i});
-        } else if (areOppositeColor(board[j][i].pcolor, currBishop.pcolor)){
+        } else if (areOppositeColor(board[j][i], currBishop)){
             add_new_move(legalMoves, (move){j, i});
             break;
         } else{// same color
@@ -132,10 +128,10 @@ List * bishopLegalMoves(BOARD board, cell currPos) {
     
 
     for (short i = currPos.c + 1, j = currPos.r - 1; i < COLUMNS && j >= 0; ++i, --j) { // upper right diagonal
-        if (pieceCMP(board[j][i], FREE_CELL)) {
+        if (board[j][i] == EMPTY) {
             add_new_move(legalMoves, (move){j, i});
         } 
-        else if (areOppositeColor(board[j][i].pcolor, currBishop.pcolor)) {
+        else if (areOppositeColor(board[j][i], currBishop)) {
             add_new_move(legalMoves, (move){j, i});
             break;
         }else { // same color
@@ -144,9 +140,9 @@ List * bishopLegalMoves(BOARD board, cell currPos) {
     }
 
     for (short i = currPos.c + 1, j = currPos.r + 1; i < COLUMNS && j < ROWS; ++i, ++j) { // lower right diagonal
-        if (pieceCMP(board[j][i], FREE_CELL)) {
+        if (board[j][i] == EMPTY) {
             add_new_move(legalMoves, (move){j, i});
-        } else if (areOppositeColor(board[j][i].pcolor, currBishop.pcolor)) {
+        } else if (areOppositeColor(board[j][i], currBishop)) {
             add_new_move(legalMoves, (move){j, i});
             break;
         } else{// same color
@@ -159,13 +155,13 @@ List * bishopLegalMoves(BOARD board, cell currPos) {
 
 List * rookLegalMoves(BOARD board, cell currPos) {
     List * legalMoves = create_list();
-    const piece currRook = board[currPos.r][currPos.c];
+    const enum piece currRook = board[currPos.r][currPos.c];
 
     // Check moves to the left
     for (short i = currPos.c - 1; i >= 0; --i) {
-        if (pieceCMP(board[currPos.r][i], FREE_CELL)) {
+        if (board[currPos.r][i] == EMPTY) {
             add_new_move(legalMoves, (move){currPos.r, i});
-        } else if (areOppositeColor(board[currPos.r][i].pcolor, currRook.pcolor)) {
+        } else if (areOppositeColor(board[currPos.r][i], currRook)) {
             add_new_move(legalMoves, (move){currPos.r, i});
             break;
         } else { // same color
@@ -175,9 +171,9 @@ List * rookLegalMoves(BOARD board, cell currPos) {
 
     // Check moves to the right
     for (short i = currPos.c + 1; i < COLUMNS; ++i) {
-        if (pieceCMP(board[currPos.r][i], FREE_CELL)) {
+        if (board[currPos.r][i] == EMPTY) {
             add_new_move(legalMoves, (move){currPos.r, i});
-        } else if (areOppositeColor(board[currPos.r][i].pcolor, currRook.pcolor)) {
+        } else if (areOppositeColor(board[currPos.r][i], currRook)) {
             add_new_move(legalMoves, (move){currPos.r, i});
             break;
         } else { // same color
@@ -187,9 +183,9 @@ List * rookLegalMoves(BOARD board, cell currPos) {
 
     // Check moves upwards
     for (short j = currPos.r - 1; j >= 0; --j) {
-        if (pieceCMP(board[j][currPos.c], FREE_CELL)) {
+        if (board[j][currPos.c] == EMPTY) {
             add_new_move(legalMoves, (move){j, currPos.c});
-        } else if (areOppositeColor(board[j][currPos.c].pcolor, currRook.pcolor)) {
+        } else if (areOppositeColor(board[j][currPos.c], currRook)) {
             add_new_move(legalMoves, (move){j, currPos.c});
             break;
         } else { // same color
@@ -199,9 +195,9 @@ List * rookLegalMoves(BOARD board, cell currPos) {
 
     // Check moves downwards
     for (short j = currPos.r + 1; j < ROWS; ++j) {
-        if (pieceCMP(board[j][currPos.c], FREE_CELL)) {
+        if (board[j][currPos.c] == EMPTY) {
             add_new_move(legalMoves, (move){j, currPos.c});
-        } else if (areOppositeColor(board[j][currPos.c].pcolor, currRook.pcolor)) {
+        } else if (areOppositeColor(board[j][currPos.c], currRook)) {
             add_new_move(legalMoves, (move){j, currPos.c});
             break;
         } else { // same color
@@ -231,10 +227,8 @@ List * kingLegalMoves (BOARD board, cell currPos){
             if( i == 1 && j == 1) continue;
             newRow = currPos.r + posOffsets[i];
             newCol = currPos.c + posOffsets[j];
-            printf("attempt");
             if (!isOutOfBounds((move){newRow, newCol}) && 
-                pieceCMP(board[currPos.r][currPos.c], FREE_CELL)) {
-                printf("Success");
+                board[currPos.r][currPos.c] == EMPTY) {
                 add_new_move(legalMoves, (move){newRow, newCol});
 
             }

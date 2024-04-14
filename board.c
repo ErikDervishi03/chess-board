@@ -3,16 +3,18 @@
 #include "valid.h"
 #include <stdio.h>
 
+
+
 const BOARD DEFAULT_BOARD = {
 
-        {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK},
-        {WHITE_PAWN, WHITE_PAWN,   WHITE_PAWN,   WHITE_PAWN,  WHITE_PAWN, WHITE_PAWN,   WHITE_PAWN,   WHITE_PAWN},
-        {FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL,   FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL},
-        {FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL,   FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL},
-        {FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL,   FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL},
-        {FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL,   FREE_CELL,  FREE_CELL,    FREE_CELL,    FREE_CELL},
-        {BLACK_PAWN, BLACK_PAWN,   BLACK_PAWN,   BLACK_PAWN,  BLACK_PAWN, BLACK_PAWN,   BLACK_PAWN,   BLACK_PAWN},
-        {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK}
+        {W_ROOK, W_KNIGHT, W_BISHOP, W_QUEEN, W_KING, W_BISHOP, W_KNIGHT, W_ROOK},
+        {W_PAWN, W_PAWN,   W_PAWN,   W_PAWN,  W_PAWN, W_PAWN,   W_PAWN,   W_PAWN},
+        {EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY},
+        {EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY},
+        {EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY},
+        {EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY},
+        {B_PAWN, B_PAWN,   B_PAWN,   B_PAWN,  B_PAWN, B_PAWN,   B_PAWN,   B_PAWN},
+        {B_ROOK, B_KNIGHT, B_BISHOP, B_QUEEN, B_KING, B_BISHOP, B_KNIGHT, B_ROOK}
         
 
 };
@@ -29,11 +31,11 @@ boardInfo extractBoardInfo ( BOARD board ){
 
                 for (int j = 0; j < COLUMNS; j++){
 
-                        if (board[i][j].pcolor == white){
+                        if (isWhite(board[i][j])){
 
                                 add_to_list( info->whitePieces , &board[i][j] );
 
-                        }else if (board[i][j].pcolor == black){
+                        }else if (isBlack(board[i][j])){
 
                                 add_to_list( info->blackPieces , &board[i][j] );
 
@@ -51,11 +53,11 @@ boardInfo extractBoardInfo ( BOARD board ){
 
 void do_move ( BOARD board , move from, move to ){
 
-        if( isLegalMove( board , to ) ){
+        if( isLegalMove( to ) ){
 
                 board[to.r][to.c] = board[from.r][from.c];
 
-                board[from.r][from.c] = FREE_CELL;
+                board[from.r][from.c] = EMPTY;
 
         }
 
@@ -66,10 +68,10 @@ void printb (BOARD board) {
 
                 for (int j = 0; j < COLUMNS; j++){
 
-                        if(pieceCMP(board[i][j], FREE_CELL)){
+                        if(board[i][j] == EMPTY){
                                 printf("0 ");
                         }else{
-                                printf("%d ", board[i][j].ptype);
+                                printf("%d ", board[i][j]);
                         }
                 }
                 printf("\n");

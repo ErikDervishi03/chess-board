@@ -6,8 +6,6 @@
 
 // idea create a bit mask in order to check wich error is active 
 
-int pieceCMP ( piece piece1, piece piece2 );
-
 int isOutOfBounds( cell pos );
 
 int isLegalMove ( move move_);
@@ -23,5 +21,7 @@ List * rookLegalMoves ( BOARD board, cell currPos );
 List * queenLegalMoves (BOARD board, cell currPos );
 
 List * kingLegalMoves ( BOARD board, cell currPos );
+
+int isInCheck();
 
 #endif // __VALID_H__
