@@ -27,6 +27,15 @@ void* remove_from_list(List* list) {
     return data;
 }
 
+int is_in_list( void* val , List* list ){
+    do{
+        if(list->head->data == val)
+            return 1;
+        list->head = list->head->next;
+    }while(list->head->next != NULL);
+    return 0;
+}
+
 void free_list(List* list) {
     Node* current_node = list->head;
     while (current_node != NULL) {

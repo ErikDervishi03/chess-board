@@ -53,7 +53,7 @@ boardInfo extractBoardInfo ( BOARD board ){
 
 void do_move ( BOARD board , move from, move to ){
 
-        if( isLegalMove( to ) ){
+        if( !isOutOfBounds( to ) ){
 
                 board[to.r][to.c] = board[from.r][from.c];
 

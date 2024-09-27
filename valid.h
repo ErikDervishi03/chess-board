@@ -8,7 +8,7 @@
 
 int isOutOfBounds( cell pos );
 
-int isLegalMove ( move move_);
+int isLegalMove ( BOARD board , move move_ , enum piece piece_ , cell currPos );
 
 List * pawnLegalMoves ( BOARD board, cell currPos );
 

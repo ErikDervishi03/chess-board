@@ -13,9 +13,13 @@ int isOutOfBounds(cell pos) {
     return (pos.r < 0 || pos.r >= ROWS || pos.c < 0 || pos.c >= COLUMNS);
 }
 
-int isLegalMove ( move move_ ) {
-
-    return !isOutOfBounds(move_) ;
+int isLegalMove ( BOARD board , move move_ , enum piece piece_ , cell currPos ) {
+    switch(piece_){
+        case B_PAWN: 
+        case W_PAWN:
+            return is_in_list( (void*)move_ , pawnLegalMoves( board , currPos ) );
+            break;
+    }
 }
 
 void add_new_move (List * dest, move src){

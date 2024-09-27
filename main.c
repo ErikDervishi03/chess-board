@@ -21,7 +21,12 @@ int main(){
     tmp = tmp->next;
   }
 
+  printf("\nBOARD\n");
+
   printb(board);
+
+  printf("\n\nPawn h2 (1-7) to h3\n: ");
+  printf("%d", isLegalMove( board, (cell){2,7}, W_PAWN, (cell){1,7}));
   
   return 0;
 
