@@ -43,6 +43,10 @@ int isLegalMove ( BOARD board , move move_ , enum piece piece_ , cell currPos ) 
         case W_KING:
             return is_in_list( (void*)move_ptr , kingLegalMoves( board , currPos ), compare_cells );
             break;
+
+        default:
+            return -1;
+            break;
     }
 }
 
@@ -117,7 +121,7 @@ List * knightLegalMoves(BOARD board, cell currPos) {
         newCol = currPos.c + colOffsets[i];
 
         if (!isOutOfBounds((move){newRow, newCol}) && 
-            board[newRow][newCol] != currKnight) {
+            (areOppositeColor(board[newRow][newCol], currKnight) || board[newRow][newCol] == EMPTY)) {
 
             add_new_move(legalMoves, (move){newRow, newCol});
 
@@ -242,6 +246,7 @@ List * queenLegalMoves (BOARD board, cell currPos){
 
 List * kingLegalMoves (BOARD board, cell currPos){
     List * legalMoves = create_list();
+    const enum piece currKing = board[currPos.r][currPos.c];
 
     // Possible offsets for king moves
     const int posOffsets[] = { -1, 0, 1};
@@ -252,14 +257,17 @@ List * kingLegalMoves (BOARD board, cell currPos){
     // Check each possible move
     for (short int i = 0; i < numMoves; ++i) {
         for(short int j = 0; j < numMoves; j++){
+
             if( i == 1 && j == 1) continue;
+
             newRow = currPos.r + posOffsets[i];
             newCol = currPos.c + posOffsets[j];
-            if (!isOutOfBounds((move){newRow, newCol}) && 
-                board[currPos.r][currPos.c] == EMPTY) {
-                add_new_move(legalMoves, (move){newRow, newCol});
 
+            if (!isOutOfBounds((move){newRow, newCol}) && 
+                (areOppositeColor(board[newRow][newCol], currKing) || board[newRow][newCol] == EMPTY)) {
+                add_new_move(legalMoves, (move){newRow, newCol});
             }
+
         }
     }
 

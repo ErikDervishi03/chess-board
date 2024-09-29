@@ -4,6 +4,7 @@
 #include "string.h"
 #include "./types.h"
 #include "./valid.h"
+#include "./data_structure/stack.h"
 #include <stdio.h>
 
 /*

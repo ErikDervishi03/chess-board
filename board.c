@@ -1,9 +1,4 @@
 #include "board.h"
-#include "types.h"
-#include "valid.h"
-#include <stdio.h>
-
-
 
 const BOARD DEFAULT_BOARD = {
 
