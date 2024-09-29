@@ -1,5 +1,17 @@
 #include "./listc.h"
 
+int compare_pieces(const void* a, const void* b) {
+    enum piece piece1 = *(enum piece*)a;
+    enum piece piece2 = *(enum piece*)b;
+    return piece1 == piece2;
+}
+
+int compare_cells(const void* a, const void* b) {
+    cell* cell1 = (cell*)a;
+    cell* cell2 = (cell*)b;
+    return (cell1->r == cell2->r) && (cell1->c == cell2->c);
+}
+
 List* create_list() {
     List* new_list = (List*)malloc(sizeof(List));
     new_list->size = 0;
@@ -27,13 +39,15 @@ void* remove_from_list(List* list) {
     return data;
 }
 
-int is_in_list( void* val , List* list ){
-    do{
-        if(list->head->data == val)
-            return 1;
-        list->head = list->head->next;
-    }while(list->head->next != NULL);
-    return 0;
+int is_in_list(void* element, List* list, int (*cmp)(const void*, const void*)) {//passare compare_pieces oppure compare_cells come parametro
+    Node* current = list->head;
+    while (current != NULL) {
+        if (cmp(element, current->data)) {
+            return 1;  // Element found in the list
+        }
+        current = current->next;
+    }
+    return 0;  // Element not found
 }
 
 void free_list(List* list) {

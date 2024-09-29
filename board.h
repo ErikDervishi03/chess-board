@@ -17,8 +17,8 @@
 
 
 #define INIT_BOARD(board) memcpy(board, DEFAULT_BOARD, sizeof(BOARD))
-#define isWhite(_piece) (_piece>=0 && _piece<=5)
-#define isBlack(_piece) (_piece>=6 && _piece<=11)
+#define isBlack(_piece) (_piece>=0 && _piece<=5)
+#define isWhite(_piece) (_piece>=6 && _piece<=11)
 
 extern const BOARD DEFAULT_BOARD ;
 

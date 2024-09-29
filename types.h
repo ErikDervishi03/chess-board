@@ -2,9 +2,6 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
-#include "./data_structure/listc.h"
-#include "./data_structure/stack.h"
-
   #ifndef true
     #define true 1
   #endif
@@ -22,9 +19,24 @@
   #define ROOK    5
   #define QUEEN   9
 
-
   #define WHITE_PAWN_INITIAL_ROW 1
   #define BLACK_PAWN_INITIAL_ROW 6
+
+  typedef struct node {
+
+    void* data;
+
+    struct node* next;
+
+  } Node;
+ 
+  typedef struct list {
+
+    int size;
+
+    Node* head;
+    
+  } List;
 
   typedef struct{
 
@@ -62,7 +74,7 @@
 
       List * blackPieces;
 
-      stack * moves;
+      List * moves;//treated as a stack by stack.c, not declared as stack here for dependency reasons
 
   } boardInfo;
 

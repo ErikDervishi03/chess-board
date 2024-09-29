@@ -1,23 +1,47 @@
 #include "valid.h"
-#include "board.h"
-#include "data_structure/listc.h"
-#include "types.h"
-
 
 #define areOppositeColor(piece1, piece2) \
         ((isWhite(piece1) && isBlack(piece2)) || \
         (isWhite(piece2) && isBlack(piece1)))
 
 
+//TO DO: for every piece check that they dont move on ally pieces
+
 int isOutOfBounds(cell pos) {
     return (pos.r < 0 || pos.r >= ROWS || pos.c < 0 || pos.c >= COLUMNS);
 }
 
 int isLegalMove ( BOARD board , move move_ , enum piece piece_ , cell currPos ) {
+    int* move_ptr = (int*)&move_;
     switch(piece_){
         case B_PAWN: 
         case W_PAWN:
-            return is_in_list( (void*)move_ , pawnLegalMoves( board , currPos ) );
+            return is_in_list( (void*)move_ptr , pawnLegalMoves( board , currPos ), compare_cells );
+            break;
+
+        case B_KNIGHT:
+        case W_KNIGHT:
+            return is_in_list( (void*)move_ptr , knightLegalMoves( board , currPos ), compare_cells );
+            break;
+        
+        case B_BISHOP:
+        case W_BISHOP:
+            return is_in_list( (void*)move_ptr , bishopLegalMoves( board , currPos ), compare_cells );
+            break;
+        
+        case B_ROOK:
+        case W_ROOK:
+            return is_in_list( (void*)move_ptr , rookLegalMoves( board , currPos ), compare_cells );
+            break;
+        
+        case B_QUEEN:
+        case W_QUEEN:
+            return is_in_list( (void*)move_ptr , queenLegalMoves( board , currPos ), compare_cells );
+            break;
+        
+        case B_KING:
+        case W_KING:
+            return is_in_list( (void*)move_ptr , kingLegalMoves( board , currPos ), compare_cells );
             break;
     }
 }
@@ -56,7 +80,7 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
     }
 
     // Left diagonal eat
-    move leftDiagonal = {currPos.r + inc, currPos.c - 1};
+    move leftDiagonal = {currPos.r + inc, currPos.c + inc};
     if (!isOutOfBounds(leftDiagonal) && 
         areOppositeColor(board[leftDiagonal.r][leftDiagonal.c], currPawn)) {
 
@@ -66,7 +90,7 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
     }
 
     // Right diagonal eat
-    move rightDiagonal = {currPos.r + inc, currPos.c + 1};
+    move rightDiagonal = {currPos.r + inc, currPos.c - inc};
     if (!isOutOfBounds(rightDiagonal) && 
         areOppositeColor(board[rightDiagonal.r][rightDiagonal.c], currPawn)) {
         add_new_move(legalMoves, rightDiagonal);

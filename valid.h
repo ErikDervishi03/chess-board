@@ -1,8 +1,9 @@
 #ifndef __VALID_H__
 #define __VALID_H__
 
-#include "data_structure/listc.h"
 #include "types.h"
+#include "./data_structure/listc.h"
+#include "board.h"
 
 // idea create a bit mask in order to check wich error is active 
 
