@@ -9,6 +9,8 @@ import random
 #chess_engine.make_move.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 #chess_engine.make_move.restype = ctypes.c_int
 
+selected_piece = '.'
+
 # Mock data for the board (8x8 grid)
 board = [
     ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
@@ -19,19 +21,21 @@ board = [
     ['.', '.', '.', '.', '.', '.', '.', '.'],
     ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
     ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
-    
 ]
 
 def initialize_board():
-    """Mock function to initialize the board."""
     print("Board initialized.")
 
-def make_move(move_from, move_to):
-    """Mock function to simulate making a move."""
-    print(f"Moving piece from {move_from} to {move_to}")
-    # For testing purposes, randomly move a piece or make no change
-    return random.choice([0, 1])  # Simulate a legal (1) or illegal (0) move
+def select_piece(piece):
+    global selected_piece 
+    selected_piece = piece
+    display_moves(select_piece)
 
-def get_piece_at(row, col):
-    """Return the piece at the given position (mocked)."""
-    return board[row][col]  # Returns a piece symbol or '.' for empty
+def make_move(move_from, move_to):
+    local_piece = board[move_from[0]][move_from[1]]
+    board[move_from[0]][move_from[1]] = '.'
+    board[move_to[0]][move_to[1]] = local_piece
+
+def display_moves(piece):
+    #empty for now
+    print(selected_piece)

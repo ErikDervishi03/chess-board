@@ -1,20 +1,19 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
-LDFLAGS =
+CC = gcc                      
+CFLAGS = -fPIC                
+LDFLAGS = -shared             
 
-SRCS = main.c board.c valid.c data_structure/listc.c data_structure/stack.c
+OUTPUT = libyourlib.so
 
+SRCS = c-engine/main.c c-engine/board.c c-engine/valid.c c-engine/data_structure/listc.c c-engine/data_structure/stack.c
 OBJS = $(SRCS:.c=.o)
 
-TARGET = chess
+all: $(OUTPUT)
 
-.PHONY: all clean
+$(OUTPUT): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^
 
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) $(LDFLAGS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	$(RM) $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(OUTPUT)
