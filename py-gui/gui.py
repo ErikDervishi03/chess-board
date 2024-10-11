@@ -1,5 +1,5 @@
 import pygame
-from chess import initialize_board, make_move, select_piece
+from chess import initialize_board, make_move, select_piece, get_selected_piece
 from utils import get_square_under_mouse, get_piece_at
 
 # Initialize Pygame and the mock chess engine
@@ -46,16 +46,34 @@ def draw_pieces():
 
 def run_game():
     running = True
+    holdingM1 = False
+    dragging = False
+    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                holdingM1 = True
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 row, col = get_square_under_mouse()
-                print(f"Clicked on square: {row}, {col}")
+                print("The function get_square_under_mouse returns row "+str(row)+" and col "+str(col))
                 piece = get_piece_at(row, col)
                 if piece != '.':
-                    select_piece(piece)
+                    dragging = True
+                    select_piece(row, col)
+            
+            if event.type == pygame.MOUSEBUTTONUP:
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                holdingM1 = False
+                if dragging == True:
+                    dragging = False
+                    row, col = get_square_under_mouse()
+                    #check for legal move
+                    move_from = get_selected_piece()
+                    make_move(move_from, (row, col))
+                    print("Moved piece from"+str(move_from)+" to "+str(row)+", "+str(col))
 
         # Draw the chessboard image
         screen.blit(board_image, (0, 0))

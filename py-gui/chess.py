@@ -9,7 +9,7 @@ import random
 #chess_engine.make_move.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 #chess_engine.make_move.restype = ctypes.c_int
 
-selected_piece = '.'
+selected_piece_pos = (-1, -1)
 
 # Mock data for the board (8x8 grid)
 board = [
@@ -21,15 +21,15 @@ board = [
     ['.', '.', '.', '.', '.', '.', '.', '.'],
     ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
     ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
-]
+] # We print row first, then column. Rows and columns are 0-indexed, so top left is 0-0, bottom right is 7-7
 
 def initialize_board():
     print("Board initialized.")
 
-def select_piece(piece):
-    global selected_piece 
-    selected_piece = piece
-    display_moves(select_piece)
+def select_piece(row, col):
+    global selected_piece_pos 
+    selected_piece_pos = (row, col)
+    display_moves(selected_piece_pos)
 
 def make_move(move_from, move_to):
     local_piece = board[move_from[0]][move_from[1]]
@@ -38,4 +38,7 @@ def make_move(move_from, move_to):
 
 def display_moves(piece):
     #empty for now
-    print(selected_piece)
+    return 0
+
+def get_selected_piece():
+    return selected_piece_pos
