@@ -17,9 +17,9 @@ Python Script: This is the file you launch to start the game. It will handle use
 
 ### C Side Responsibilities:
 
-- Game Logic: Implementing the core logic for the chess engine, including:
-    . Move Generation: Determining all legal moves for a given position.
-    . Move Validation: Ensuring moves are legal according to the rules of chess.
+- Game Logic: Implementing the core logic for the chess engine, including:\
+    . Move Generation: Determining all legal moves for a given position.\
+    . Move Validation: Ensuring moves are legal according to the rules of chess.\
     . Game State Evaluation: Assessing the board's state for AI decisions, checking for check, checkmate, stalemate, etc.
 - Performance-Critical Calculations: All heavy computing, so all Algorithms used to create the engine.
 
