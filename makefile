@@ -1,8 +1,8 @@
-CC = gcc                      
-CFLAGS = -fPIC                
-LDFLAGS = -shared             
+CC = gcc
+CFLAGS = -fPIC
+LDFLAGS = -shared
 
-OUTPUT = libyourlib.so
+OUTPUT = sharedC.so
 
 SRCS = c-engine/main.c c-engine/board.c c-engine/valid.c c-engine/data_structure/listc.c c-engine/data_structure/stack.c
 OBJS = $(SRCS:.c=.o)

@@ -84,6 +84,8 @@
 
   typedef enum piece BOARD[ROWS][COLUMNS];
 
+  typedef int BoardReceiver[64];
+
   // board [pos] => piece
 
 #endif

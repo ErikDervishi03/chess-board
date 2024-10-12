@@ -46,7 +46,23 @@ boardInfo extractBoardInfo ( BOARD board ){
 
 }
 
-void do_move ( BOARD board , move from, move to ){
+BOARD convert_board( BoardReceiver boardArray ){
+        INIT_BOARD(board);
+        for (int i = 0; i < ROWS; i++){
+
+                for (int j = 0; j < COLUMNS; j++){
+
+                        board[i][j] = boardArray[(i*COLUMNS) + j];
+
+                }
+
+        }
+        return board;
+}
+
+void do_move ( BoardReceiver boardArray , move from, move to ){
+
+        BOARD board = convert_board(boardArray);
 
         if( !isOutOfBounds( to ) ){
 
@@ -56,6 +72,7 @@ void do_move ( BOARD board , move from, move to ){
 
         }
 
+        printb( board );
 }
 
 void printb (BOARD board) {

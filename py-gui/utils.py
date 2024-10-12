@@ -1,5 +1,5 @@
 import pygame
-from chess import board
+from wrapper import pyboard
 
 def get_square_under_mouse():
     from gui import SQUARE_SIZE
@@ -9,4 +9,4 @@ def get_square_under_mouse():
     return row, col
 
 def get_piece_at(row, col):
-    return board[row][col]  # Returns a piece symbol or '.' for empty
+    return pyboard[row][col]  

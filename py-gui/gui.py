@@ -1,6 +1,7 @@
 import pygame
 from chess import initialize_board, make_move, select_piece, get_selected_piece
 from utils import get_square_under_mouse, get_piece_at
+from wrapper import Piece
 
 # Initialize Pygame and the mock chess engine
 pygame.init()
@@ -41,7 +42,7 @@ def draw_pieces():
     for row in range(8):
         for col in range(8):
             piece = get_piece_at(row, col)
-            if piece != '.':
+            if piece != '.':  
                 screen.blit(piece_images[piece], ((col * SQUARE_SIZE)+PADDING, (row * SQUARE_SIZE)+PADDING))
 
 def run_game():
