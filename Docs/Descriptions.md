@@ -27,9 +27,8 @@ Python Script: This is the file you launch to start the game. It will handle use
 ## Files
 
 ### main.py
-
+[//]: # (The structure will vary, it may not call gui forever.)
 The launch script, only starts everything off. Calls upon gui.py to start the loop.
-    [//]: # (The structure will vary, it may not call gui forever.)
 
 ### gui.py
 
