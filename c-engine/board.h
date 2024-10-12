@@ -25,6 +25,8 @@ extern const BOARD DEFAULT_BOARD ;
 
 boardInfo extractBoardInfo ( BOARD board );
 
+BOARD convert_board( BoardReceiver boardArray );
+
 void do_move ( BOARD board , move from, move to );
 
 void printb (BOARD board);

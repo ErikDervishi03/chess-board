@@ -4,8 +4,11 @@
         ((isWhite(piece1) && isBlack(piece2)) || \
         (isWhite(piece2) && isBlack(piece1)))
 
+#define areSameColor(piece1, piece2) \
+        ((isWhite(piece1) && isWhite(piece2)) || \
+        (isBlack(piece1) && isBlack(piece2)))
 
-//TO DO: for every piece check that they dont move on ally pieces
+
 
 int isOutOfBounds(cell pos) {
     return (pos.r < 0 || pos.r >= ROWS || pos.c < 0 || pos.c >= COLUMNS);
@@ -77,7 +80,7 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
     int pawnInitialRow = isWhite(currPawn) ? WHITE_PAWN_INITIAL_ROW : BLACK_PAWN_INITIAL_ROW;
     move forwardTwo = {currPos.r + 2 * inc, currPos.c};
     if (currPos.r == pawnInitialRow && !isOutOfBounds(forwardTwo) && 
-        board[forwardTwo.r][forwardTwo.c] == EMPTY) {
+        board[forwardTwo.r][forwardTwo.c] == EMPTY && board[forwardOne.r][forwardOne.c] == EMPTY) {
 
         add_new_move(legalMoves, forwardTwo);
 
