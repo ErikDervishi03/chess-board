@@ -1,7 +1,6 @@
 import pygame
 from chess import initialize_board, make_move, select_piece, get_selected_piece
 from utils import get_square_under_mouse, get_piece_at
-from wrapper import Piece
 
 # Initialize Pygame and the mock chess engine
 pygame.init()

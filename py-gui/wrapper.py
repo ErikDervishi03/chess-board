@@ -16,20 +16,19 @@ QUEEN = 9
 WHITE_PAWN_INITIAL_ROW = 1
 BLACK_PAWN_INITIAL_ROW = 6
 
-class Piece(Enum):
-    B_PAWN = 0
-    B_KNIGHT = 1
-    B_BISHOP = 2
-    B_ROOK = 3
-    B_QUEEN = 4
-    B_KING = 5
-    W_PAWN = 6
-    W_KNIGHT = 7
-    W_BISHOP = 8
-    W_ROOK = 9
-    W_QUEEN = 10
-    W_KING = 11
-    EMPTY = 12
+B_PAWN = 0
+B_KNIGHT = 1
+B_BISHOP = 2
+B_ROOK = 3
+B_QUEEN = 4
+B_KING = 5
+W_PAWN = 6
+W_KNIGHT = 7
+W_BISHOP = 8
+W_ROOK = 9
+W_QUEEN = 10
+W_KING = 11
+EMPTY = 12
 
 class Cell(ctypes.Structure):
     _fields_ = [("r", ctypes.c_int), ("c", ctypes.c_int)]
@@ -59,14 +58,14 @@ class BoardInfo:
 BoardType = ctypes.c_int * BOARD_SIZE
 
 cBoard = BoardType(
-    Piece.W_ROOK.value, Piece.W_KNIGHT.value, Piece.W_BISHOP.value, Piece.W_QUEEN.value, Piece.W_KING.value, Piece.W_BISHOP.value, Piece.W_KNIGHT.value, Piece.W_ROOK.value,
-    Piece.W_PAWN.value, Piece.W_PAWN.value,   Piece.W_PAWN.value,   Piece.W_PAWN.value,  Piece.W_PAWN.value,  Piece.W_PAWN.value,   Piece.W_PAWN.value,   Piece.W_PAWN.value,
-    Piece.EMPTY.value,  Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,   Piece.EMPTY.value,   Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,
-    Piece.EMPTY.value,  Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,   Piece.EMPTY.value,   Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,
-    Piece.EMPTY.value,  Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,   Piece.EMPTY.value,   Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,
-    Piece.EMPTY.value,  Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,   Piece.EMPTY.value,   Piece.EMPTY.value,    Piece.EMPTY.value,    Piece.EMPTY.value,
-    Piece.B_PAWN.value, Piece.B_PAWN.value,   Piece.B_PAWN.value,   Piece.B_PAWN.value,  Piece.B_PAWN.value,  Piece.B_PAWN.value,   Piece.B_PAWN.value,   Piece.B_PAWN.value,
-    Piece.B_ROOK.value, Piece.B_KNIGHT.value, Piece.B_BISHOP.value, Piece.B_QUEEN.value, Piece.B_KING.value,  Piece.B_BISHOP.value, Piece.B_KNIGHT.value, Piece.B_ROOK.value
+    W_ROOK, W_KNIGHT, W_BISHOP, W_QUEEN, W_KING, W_BISHOP, W_KNIGHT, W_ROOK,
+    W_PAWN, W_PAWN,   W_PAWN,   W_PAWN,  W_PAWN, W_PAWN,   W_PAWN,   W_PAWN,
+    EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY,
+    EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY,
+    EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY,
+    EMPTY,  EMPTY,    EMPTY,    EMPTY,   EMPTY,  EMPTY,    EMPTY,    EMPTY,
+    B_PAWN, B_PAWN,   B_PAWN,   B_PAWN,  B_PAWN, B_PAWN,   B_PAWN,   B_PAWN,
+    B_ROOK, B_KNIGHT, B_BISHOP, B_QUEEN, B_KING, B_BISHOP, B_KNIGHT, B_ROOK
 )
 
 pyboard = [
@@ -83,21 +82,17 @@ pyboard = [
 # We use pyboard for python stuff and then sync cboard to it for c correspondence
 def sync_boards():
     piece_map = {
-        'R': Piece.W_ROOK.value,    'N': Piece.W_KNIGHT.value, 'B': Piece.W_BISHOP.value,
-        'Q': Piece.W_QUEEN.value,   'K': Piece.W_KING.value,   'P': Piece.W_PAWN.value,
-        'r': Piece.B_ROOK.value,    'n': Piece.B_KNIGHT.value, 'b': Piece.B_BISHOP.value,
-        'q': Piece.B_QUEEN.value,   'k': Piece.B_KING.value,   'p': Piece.B_PAWN.value,
-        '.': Piece.EMPTY.value
+        'R': W_ROOK,    'N': W_KNIGHT, 'B': W_BISHOP,
+        'Q': W_QUEEN,   'K': W_KING,   'P': W_PAWN,
+        'r': B_ROOK,    'n': B_KNIGHT, 'b': B_BISHOP,
+        'q': B_QUEEN,   'k': B_KING,   'p': B_PAWN,
+        '.': EMPTY
     }
 
     for row in range(ROWS):
         for col in range(COLUMNS):
             piece_char = pyboard[row][col]
             cBoard[(row*COLUMNS) +col] = ctypes.c_int(piece_map[piece_char])
-
-
-    
-    
 
 
 # Load the shared library

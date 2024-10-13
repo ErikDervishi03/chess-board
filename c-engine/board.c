@@ -14,7 +14,7 @@ const BOARD DEFAULT_BOARD = {
 
 };
 
-BOARD* global_board[ROWS][COLUMNS];
+BOARD global_board;
 
 boardInfo extractBoardInfo ( BOARD board ){
 
@@ -50,14 +50,11 @@ boardInfo extractBoardInfo ( BOARD board ){
 
 void convert_board( BoardReceiver boardArray ){
 
-        BOARD board;
-        INIT_BOARD(board);
-
         for (int i = 0; i < ROWS; i++){
 
                 for (int j = 0; j < COLUMNS; j++){
 
-                        board[i][j] = boardArray[(i*COLUMNS) + j];
+                        global_board[i][j] = boardArray[(i*COLUMNS) + j];
 
                 }
 
@@ -66,15 +63,14 @@ void convert_board( BoardReceiver boardArray ){
 
 void do_move ( BoardReceiver boardArray , move from, move to ){
 
+        BOARD board;
         convert_board(boardArray);
 
-        BOARD board;
-        INIT_BOARD(board);
         for (int i = 0; i < ROWS; i++){
 
                 for (int j = 0; j < COLUMNS; j++){
 
-                        board[i][j] = (long int)global_board[(i*COLUMNS) + j];
+                        board[i][j] = global_board[i][j];
 
                 }
 
@@ -87,22 +83,65 @@ void do_move ( BoardReceiver boardArray , move from, move to ){
                 board[from.r][from.c] = EMPTY;
 
         }
-        //logfile?
+        
+        printb(board);
 }
 
 void printb (BOARD board) {
+        FILE *f = fopen("../boardLog.txt", "w");//deletes old content
         for (int i = 0; i < ROWS; i++){
 
                 for (int j = 0; j < COLUMNS; j++){
 
                         if(board[i][j] == EMPTY){
-                                printf("0 ");
+                                fprintf(f, "0 ");
                         }else{
-                                printf("%d ", board[i][j]);
+                                switch(board[i][j]){
+                                        case B_PAWN:
+                                                fprintf(f, "p ");
+                                                break;
+                                        case B_KNIGHT:
+                                                fprintf(f, "n ");
+                                                break;
+                                        case B_BISHOP:
+                                                fprintf(f, "b ");
+                                                break;
+                                        case B_ROOK:
+                                                fprintf(f, "r ");
+                                                break;
+                                        case B_QUEEN:
+                                                fprintf(f, "q ");
+                                                break; 
+                                        case B_KING:
+                                                fprintf(f, "k ");
+                                                break;  
+                                        case W_PAWN:
+                                                fprintf(f, "P ");
+                                                break; 
+                                        case W_KNIGHT:
+                                                fprintf(f, "N ");
+                                                break;
+                                        case W_BISHOP:
+                                                fprintf(f, "B ");
+                                                break;
+                                        case W_ROOK:
+                                                fprintf(f, "R ");
+                                                break;  
+                                        case W_QUEEN:
+                                                fprintf(f, "Q ");
+                                                break; 
+                                        case W_KING:
+                                                fprintf(f, "K ");
+                                                break;  
+                                        default:
+                                                fprintf(f, "X ");
+                                }
                         }
+
                 }
-                printf("\n");
+                fprintf(f, "\n");
 
         }
+        fclose(f);
 } 
 
