@@ -14,6 +14,8 @@ const BOARD DEFAULT_BOARD = {
 
 };
 
+BOARD* global_board[ROWS][COLUMNS];
+
 boardInfo extractBoardInfo ( BOARD board ){
 
         boardInfo * info = (boardInfo *) malloc(sizeof(boardInfo));
@@ -46,8 +48,11 @@ boardInfo extractBoardInfo ( BOARD board ){
 
 }
 
-BOARD convert_board( BoardReceiver boardArray ){
+void convert_board( BoardReceiver boardArray ){
+
+        BOARD board;
         INIT_BOARD(board);
+
         for (int i = 0; i < ROWS; i++){
 
                 for (int j = 0; j < COLUMNS; j++){
@@ -57,12 +62,23 @@ BOARD convert_board( BoardReceiver boardArray ){
                 }
 
         }
-        return board;
 }
 
 void do_move ( BoardReceiver boardArray , move from, move to ){
 
-        BOARD board = convert_board(boardArray);
+        convert_board(boardArray);
+
+        BOARD board;
+        INIT_BOARD(board);
+        for (int i = 0; i < ROWS; i++){
+
+                for (int j = 0; j < COLUMNS; j++){
+
+                        board[i][j] = (long int)global_board[(i*COLUMNS) + j];
+
+                }
+
+        }
 
         if( !isOutOfBounds( to ) ){
 
@@ -71,8 +87,7 @@ void do_move ( BoardReceiver boardArray , move from, move to ){
                 board[from.r][from.c] = EMPTY;
 
         }
-
-        printb( board );
+        //logfile?
 }
 
 void printb (BOARD board) {

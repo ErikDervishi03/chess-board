@@ -7,16 +7,6 @@
 #include "./data_structure/stack.h"
 #include <stdio.h>
 
-/*
-
-        TO DO: 
-                move (BOARD, PIECE, POSITION)
-
-        move --> piece move from a loc to another loc.
-
-*/
-
-
 #define INIT_BOARD(board) memcpy(board, DEFAULT_BOARD, sizeof(BOARD))
 #define isBlack(_piece) (_piece>=0 && _piece<=5)
 #define isWhite(_piece) (_piece>=6 && _piece<=11)
@@ -25,9 +15,9 @@ extern const BOARD DEFAULT_BOARD ;
 
 boardInfo extractBoardInfo ( BOARD board );
 
-BOARD convert_board( BoardReceiver boardArray );
+void convert_board( BoardReceiver boardArray );
 
-void do_move ( BOARD board , move from, move to );
+void do_move ( BoardReceiver boardArray , move from, move to );
 
 void printb (BOARD board);
 

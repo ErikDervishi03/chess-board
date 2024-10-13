@@ -4,7 +4,7 @@ LDFLAGS = -shared
 
 OUTPUT = sharedC.so
 
-SRCS = c-engine/main.c c-engine/board.c c-engine/valid.c c-engine/data_structure/listc.c c-engine/data_structure/stack.c
+SRCS = c-engine/main.c c-engine/board.c c-engine/valid.c c-engine/data_structure/listc.c c-engine/data_structure/stack.c c-engine/engine.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(OUTPUT)

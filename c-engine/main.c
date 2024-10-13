@@ -13,6 +13,8 @@ int main(){
 
 }
 
+//This main is basically only useful if you wanto to use the engine without the python side.
+
 /*
 Node * tmp = bishopLegalMoves(board, (cell){3, 5})->head;
   printf("mosse legali wBishop da 3-5\n");
