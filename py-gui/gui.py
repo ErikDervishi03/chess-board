@@ -1,10 +1,9 @@
 import pygame
-from chess import initialize_board, make_move, select_piece, get_selected_piece
+from chess import make_move, select_piece, get_selected_piece
 from utils import get_square_under_mouse, get_piece_at
 
-# Initialize Pygame and the mock chess engine
+# Initialize Pygame
 pygame.init()
-initialize_board()
 
 # Define board parameters
 WIDTH, HEIGHT = 640, 640
@@ -13,13 +12,11 @@ PADDING = SQUARE_SIZE / 32 # seems useless but looks bad without this
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Chess Board")
 
-# Define colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+# Define colors (blue theme)
+WHITE = (105, 113, 129)
+BLACK = (39, 45, 56)
 
 # Define Assets
-board_image = pygame.image.load('assets/board.png')
-board_image = pygame.transform.scale(board_image, (WIDTH, HEIGHT))
 piece_STDSIZE = (75 , 75)
 piece_images = {
     'P': pygame.transform.scale(pygame.image.load('assets/wPawn.png'), piece_STDSIZE),
@@ -36,6 +33,16 @@ piece_images = {
     'n': pygame.transform.scale(pygame.image.load('assets/bKnight.png'), piece_STDSIZE)
 }
 
+def draw_board():
+    """Draw the chessboard with alternating black and white squares."""
+    for row in range(8):
+        for col in range(8):
+            if (row + col) % 2 == 0:
+                color = WHITE
+            else:
+                color = BLACK
+            pygame.draw.rect(screen, color, (col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+
 def draw_pieces():
     """Draw the pieces."""
     for row in range(8):
@@ -43,6 +50,28 @@ def draw_pieces():
             piece = get_piece_at(row, col)
             if piece != '.':  
                 screen.blit(piece_images[piece], ((col * SQUARE_SIZE)+PADDING, (row * SQUARE_SIZE)+PADDING))
+
+def display_moves(row, col):
+    """Draw the legal moves for a clicked piece"""
+    print("lesgo")
+#def draw_legal_moves(legal_moves, is_white_turn):
+#    """Draw small transparent circles for legal moves, and larger ones for enemy captures."""
+#    for move in legal_moves:
+#        row, col = move
+#        piece = pyboard[row][col]
+#        
+#        # Determine circle size based on if it's an enemy piece
+#        if piece == '.':
+#            # Draw small transparent circle for an empty square
+#            pygame.draw.circle(screen, CIRCLE_COLOR[:3], 
+#                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
+#                               SQUARE_SIZE // 4)
+#        elif is_enemy_piece(piece, is_white_turn):
+#            # Draw a larger red circle for an enemy piece
+#            pygame.draw.circle(screen, ENEMY_CIRCLE_COLOR[:3], 
+#                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
+#                               SQUARE_SIZE // 3)
+
 
 def run_game():
     running = True
@@ -58,7 +87,6 @@ def run_game():
                 holdingM1 = True
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 row, col = get_square_under_mouse()
-                print("The function get_square_under_mouse returns row "+str(row)+" and col "+str(col))
                 piece = get_piece_at(row, col)
                 if piece != '.':
                     dragging = True
@@ -69,14 +97,16 @@ def run_game():
                 holdingM1 = False
                 if dragging == True:
                     dragging = False
+                    if (row, col) == get_square_under_mouse():
+                        display_moves(row,col)
+                        continue
                     row, col = get_square_under_mouse()
                     #check for legal move
                     move_from = get_selected_piece()
                     make_move(move_from, (row, col))
-                    print("Moved piece from"+str(move_from)+" to "+str(row)+", "+str(col))
 
         # Draw the chessboard image
-        screen.blit(board_image, (0, 0))
+        draw_board()
 
         # Draw the pieces on top of the board
         draw_pieces()
