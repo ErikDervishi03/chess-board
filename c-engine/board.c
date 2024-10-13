@@ -143,5 +143,5 @@ void printb (BOARD board) {
 
         }
         fclose(f);
-} 
+}
 
