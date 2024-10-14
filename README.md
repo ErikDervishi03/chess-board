@@ -12,3 +12,4 @@ make move display
 make game loop
 make match creation((re)starting a game)
 make turn logic
+drag images

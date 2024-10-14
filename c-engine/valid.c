@@ -62,6 +62,48 @@ void add_new_move (List * dest, move src){
         }
 }
 
+List * moveFinder(BoardReceiver boardArray, Cell piecePos){
+
+    BOARD board;
+    convert_board(boardArray);
+
+    switch(board[piecePos.r][piecePos.c]){
+        case B_PAWN: 
+        case W_PAWN:
+            return pawnLegalMoves(board, piecePos);
+            break;
+
+        case B_KNIGHT:
+        case W_KNIGHT:
+            return knightLegalMoves(board, piecePos);
+            break;
+        
+        case B_BISHOP:
+        case W_BISHOP:
+            return bishopLegalMoves(board, piecePos);
+            break;
+        
+        case B_ROOK:
+        case W_ROOK:
+            return rookLegalMoves(board, piecePos);
+            break;
+        
+        case B_QUEEN:
+        case W_QUEEN:
+            return is_in_list( (void*)move_ptr , queenLegalMoves( board , currPos ), compare_cells );
+            break;
+        
+        case B_KING:
+        case W_KING:
+            return is_in_list( (void*)move_ptr , kingLegalMoves( board , currPos ), compare_cells );
+            break;
+
+        default:
+            return -1;
+            break;
+    }
+}
+
 List * pawnLegalMoves(BOARD board, cell currPos) {
     List * legalMoves = create_list();
     const enum piece currPawn = board[currPos.r][currPos.c];

@@ -108,6 +108,11 @@ def do_move_w(pyboard, move_from, move_to):
     sync_boards()
     chess_engine.do_move(cBoard, move_from, move_to)
 
+def legal_moves_w(pyboard, piecePos):
+    from utils import get_piece_at
+    sync_boards()
+    
+
 
 
 

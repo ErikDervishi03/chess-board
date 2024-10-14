@@ -53,24 +53,22 @@ def draw_pieces():
 
 def display_moves(row, col):
     """Draw the legal moves for a clicked piece"""
-    print("lesgo")
-#def draw_legal_moves(legal_moves, is_white_turn):
-#    """Draw small transparent circles for legal moves, and larger ones for enemy captures."""
-#    for move in legal_moves:
-#        row, col = move
-#        piece = pyboard[row][col]
-#        
-#        # Determine circle size based on if it's an enemy piece
-#        if piece == '.':
-#            # Draw small transparent circle for an empty square
-#            pygame.draw.circle(screen, CIRCLE_COLOR[:3], 
-#                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
-#                               SQUARE_SIZE // 4)
-#        elif is_enemy_piece(piece, is_white_turn):
-#            # Draw a larger red circle for an enemy piece
-#            pygame.draw.circle(screen, ENEMY_CIRCLE_COLOR[:3], 
-#                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
-#                               SQUARE_SIZE // 3)
+    # wrapper function, then check if this code is correct
+    for move in legal_moves:
+        row, col = move
+        piece = pyboard[row][col]
+        
+        # Determine circle size based on if it's an enemy piece
+        if piece == '.':
+            # Draw small transparent circle for an empty square
+            pygame.draw.circle(screen, CIRCLE_COLOR[:3], 
+                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
+                               SQUARE_SIZE // 4)
+        elif is_enemy_piece(piece, is_white_turn):
+            # Draw a larger red circle for an enemy piece
+            pygame.draw.circle(screen, ENEMY_CIRCLE_COLOR[:3], 
+                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
+                               SQUARE_SIZE // 3)
 
 
 def run_game():
@@ -98,10 +96,9 @@ def run_game():
                 if dragging == True:
                     dragging = False
                     if (row, col) == get_square_under_mouse():
-                        display_moves(row,col)
+                        #reset image to square if dragging(might not be necessary)
                         continue
                     row, col = get_square_under_mouse()
-                    #check for legal move
                     move_from = get_selected_piece()
                     make_move(move_from, (row, col))
 
