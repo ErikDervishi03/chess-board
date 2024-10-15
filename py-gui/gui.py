@@ -74,7 +74,7 @@ def display_moves(row, col):
     print("legal_moves should not be null right now, ")
     
 def draw_moves():
-    if(legal_moves == None):
+    if not legal_moves:
         return
     print("made it past first if in draw_moves, ")
     for move in legal_moves:
@@ -85,20 +85,21 @@ def draw_moves():
         # Determine circle size based on if it's an enemy piece
         if piece == '.':
             # Draw small transparent circle for an empty square
-            pygame.draw.circle(screen, CIRCLE_COLOR[:3], 
+            pygame.draw.circle(screen, (255,255,255), 
                                (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
-                               SQUARE_SIZE // 4)
+                               SQUARE_SIZE // 5)
         else:
             # Draw a larger red circle for an enemy piece
-            pygame.draw.circle(screen, ENEMY_CIRCLE_COLOR[:3], 
+            pygame.draw.circle(screen, (255,255,255), 
                                (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
-                               SQUARE_SIZE // 3)
+                               SQUARE_SIZE // 2)
 
 
 def run_game():
     running = True
     holdingM1 = False
     dragging = False
+    global legal_moves
     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
     while running:
         for event in pygame.event.get():

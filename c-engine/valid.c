@@ -62,22 +62,44 @@ void add_new_move (List * dest, move src){
         }
 }
 
-List * moveFinder(BoardReceiver boardArray, cell piecePos){
-
+List * moveFinder(BoardReceiver boardArray, cell piecePos){//GIVE UP ON RETURNING LIST, CREATE NEW TYPE EASIER TO CONVERT
+    FILE *f = fopen("../testMoves.txt", "w");//deletes old content
+    fprintf(f, "please");
     BOARD board;
+    INIT_BOARD(board);
     convert_board(boardArray);
+    fprintf(f, "List to do");
     List* moves = malloc(sizeof(List)); // Allocate memory for List
+    fprintf(f, "List done");
     moves->size = 0; // Initialize size
     moves->head = NULL;
+    List* emptyList = malloc(sizeof(List));
+    fprintf(f, "List 2 done");
+    Node* emptyNode = malloc(sizeof(Node));
+    fprintf(f, "node done");
+    cell basecell;
+    basecell.r = 2;
+    basecell.c = 2;
+    emptyNode->data = (void*)basecell;
+    emptyNode->next = NULL;
+    emptyList->size = 1; // Initialize size
+    emptyList->head = emptyNode;
+    fprintf(f, "All done");
+    fclose(f);
 
     switch(board[piecePos.r][piecePos.c]){
         case B_PAWN: 
         case W_PAWN:
             moves = pawnLegalMoves(board, piecePos);
+            //moves work officially, up to this point no problems
+            if(moves == NULL){
+                //fprintf(f, "Gave back null");
+                return emptyList;
+            }
             return moves;
             break;
 
-        case B_KNIGHT:
+        /*case B_KNIGHT:
         case W_KNIGHT:
             return knightLegalMoves(board, piecePos);
             break;
@@ -101,11 +123,12 @@ List * moveFinder(BoardReceiver boardArray, cell piecePos){
         case W_KING:
             return kingLegalMoves(board, piecePos);
             break;
-
+*/
         default:
-            return NULL;
+            return emptyList;
             break;
     }
+    //fclose(f);
 }
 
 List * pawnLegalMoves(BOARD board, cell currPos) {

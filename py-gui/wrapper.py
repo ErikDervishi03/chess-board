@@ -116,31 +116,30 @@ def do_move_w(pyboard, move_from, move_to):
 
 def legal_moves_w(pyboard, piecePos):
     print("\nIn legal_moves_w")
-    from utils import get_piece_at
     sync_boards()
     result = chess_engine.moveFinder(cBoard, piecePos)
+    print(chess_engine.moveFinder(cBoard, piecePos))
 
     # If result is NULL, return None
     if not result:
-        print("Result seems to be null")
+        print("Result from moveFinder is NULL.")
         return None
+    
+    # Valid result, now access the list
+    #print("List pointer address:", result)
+    #print("List size:", result.contents.size)
+#
+    #current_node = result.contents.head
+    #for i in range(result.contents.size):
+    #    if current_node:
+    #        cell_data = current_node.contents.data.contents
+    #        print(f"Move {i + 1}: Row = {cell_data.r}, Column = {cell_data.c}")
+    #        current_node = current_node.contents.next
+    #    else:
+    #        print("Reached the end of the list.")
+    #        break
 
-    # Initialize an empty list to store the moves
-    legal_moves = []
-
-    # Traverse the C linked list
-    current_node = result.contents.head
-    print("Received a list\n")
-    while current_node:
-        # Access the Cell* data in the current node and convert it to a Python tuple (row, col)
-        cell = current_node.data.contents  # Assuming data is a pointer to a Cell structure
-        legal_moves.append((cell.r, cell.c))
-        print("Cell "+cell.r+" "+cell.c)
-
-        # Move to the next node
-        current_node = current_node.next
-
-    return legal_moves
+    return result
     
 
 
