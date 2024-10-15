@@ -1,6 +1,7 @@
 import pygame
 from chess import make_move, select_piece, get_selected_piece
 from utils import get_square_under_mouse, get_piece_at
+from wrapper import legal_moves_w, pyboard, List, Node
 
 # Initialize Pygame
 pygame.init()
@@ -11,6 +12,7 @@ SQUARE_SIZE = WIDTH // 8
 PADDING = SQUARE_SIZE / 32 # seems useless but looks bad without this
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Chess Board")
+legal_moves = []
 
 # Define colors (blue theme)
 WHITE = (105, 113, 129)
@@ -51,10 +53,32 @@ def draw_pieces():
             if piece != '.':  
                 screen.blit(piece_images[piece], ((col * SQUARE_SIZE)+PADDING, (row * SQUARE_SIZE)+PADDING))
 
+#def traverse_list(list_ptr):
+#    # Start at the head of the list
+#    current_node = list_ptr.contents.head
+#
+#    # Traverse the list
+#    while current_node:
+#        # Cast 'data' to the correct type, here assuming it's an int
+#        data_value = ctypes.cast(current_node.contents.data, ctypes.POINTER(ctypes.c_int)).contents.value
+#        print(f"Node data: {data_value}")
+#
+#        # Move to the next node
+#        current_node = current_node.contents.next
+
 def display_moves(row, col):
+    print("\nIn display_moves")
     """Draw the legal moves for a clicked piece"""
-    # wrapper function, then check if this code is correct
+    global legal_moves
+    legal_moves = legal_moves_w(pyboard, (row,col))
+    print("legal_moves should not be null right now, ")
+    
+def draw_moves():
+    if(legal_moves == None):
+        return
+    print("made it past first if in draw_moves, ")
     for move in legal_moves:
+        print("Draw moves drawing\n")
         row, col = move
         piece = pyboard[row][col]
         
@@ -64,7 +88,7 @@ def display_moves(row, col):
             pygame.draw.circle(screen, CIRCLE_COLOR[:3], 
                                (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
                                SQUARE_SIZE // 4)
-        elif is_enemy_piece(piece, is_white_turn):
+        else:
             # Draw a larger red circle for an enemy piece
             pygame.draw.circle(screen, ENEMY_CIRCLE_COLOR[:3], 
                                (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
@@ -89,6 +113,8 @@ def run_game():
                 if piece != '.':
                     dragging = True
                     select_piece(row, col)
+                else:
+                    legal_moves = []
             
             if event.type == pygame.MOUSEBUTTONUP:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -101,12 +127,15 @@ def run_game():
                     row, col = get_square_under_mouse()
                     move_from = get_selected_piece()
                     make_move(move_from, (row, col))
+                    legal_moves = []
 
         # Draw the chessboard image
         draw_board()
 
         # Draw the pieces on top of the board
         draw_pieces()
+
+        draw_moves()
 
         pygame.display.flip()
 

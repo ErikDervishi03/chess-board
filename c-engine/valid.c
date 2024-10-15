@@ -62,15 +62,19 @@ void add_new_move (List * dest, move src){
         }
 }
 
-List * moveFinder(BoardReceiver boardArray, Cell piecePos){
+List * moveFinder(BoardReceiver boardArray, cell piecePos){
 
     BOARD board;
     convert_board(boardArray);
+    List* moves = malloc(sizeof(List)); // Allocate memory for List
+    moves->size = 0; // Initialize size
+    moves->head = NULL;
 
     switch(board[piecePos.r][piecePos.c]){
         case B_PAWN: 
         case W_PAWN:
-            return pawnLegalMoves(board, piecePos);
+            moves = pawnLegalMoves(board, piecePos);
+            return moves;
             break;
 
         case B_KNIGHT:
@@ -90,16 +94,16 @@ List * moveFinder(BoardReceiver boardArray, Cell piecePos){
         
         case B_QUEEN:
         case W_QUEEN:
-            return is_in_list( (void*)move_ptr , queenLegalMoves( board , currPos ), compare_cells );
+            return queenLegalMoves(board, piecePos);
             break;
         
         case B_KING:
         case W_KING:
-            return is_in_list( (void*)move_ptr , kingLegalMoves( board , currPos ), compare_cells );
+            return kingLegalMoves(board, piecePos);
             break;
 
         default:
-            return -1;
+            return NULL;
             break;
     }
 }

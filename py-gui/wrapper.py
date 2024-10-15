@@ -44,16 +44,20 @@ class Cell(ctypes.Structure):
         else:
             raise TypeError(f"Cannot convert {obj} to Cell")
 
-class List:
-    def __init__(self):
-        self.size = 0
-        self.head = None
+# Types for C functions
+class Node(ctypes.Structure):
+    pass  # Forward declaration since Node contains a pointer to itself
 
-class BoardInfo:
-    def __init__(self):
-        self.whitePieces = List()
-        self.blackPieces = List()
-        self.moves = List()  # List for moves
+Node._fields_ = [
+    ("data", ctypes.POINTER(Cell)),    # Pointer to void (can point to any data)
+    ("next", ctypes.POINTER(Node))  # Pointer to the next node (self-referential)
+]
+
+class List(ctypes.Structure):
+    _fields_ = [
+        ("size", ctypes.c_int),            # Integer size of the list
+        ("head", ctypes.POINTER(Node))     # Pointer to the head of the list (a Node)
+    ]
 
 BoardType = ctypes.c_int * BOARD_SIZE
 
@@ -102,6 +106,8 @@ chess_engine = ctypes.CDLL('../sharedC.so')
 #chess_engine.initialize_board.restype = None
 chess_engine.do_move.argtypes = [BoardType, Cell, Cell]
 chess_engine.do_move.restype = None
+chess_engine.moveFinder.argtypes = [BoardType, Cell]
+chess_engine.moveFinder.restype = ctypes.POINTER(List)
 
 # do_move wrapper so i can sync the boards
 def do_move_w(pyboard, move_from, move_to):
@@ -109,8 +115,32 @@ def do_move_w(pyboard, move_from, move_to):
     chess_engine.do_move(cBoard, move_from, move_to)
 
 def legal_moves_w(pyboard, piecePos):
+    print("\nIn legal_moves_w")
     from utils import get_piece_at
     sync_boards()
+    result = chess_engine.moveFinder(cBoard, piecePos)
+
+    # If result is NULL, return None
+    if not result:
+        print("Result seems to be null")
+        return None
+
+    # Initialize an empty list to store the moves
+    legal_moves = []
+
+    # Traverse the C linked list
+    current_node = result.contents.head
+    print("Received a list\n")
+    while current_node:
+        # Access the Cell* data in the current node and convert it to a Python tuple (row, col)
+        cell = current_node.data.contents  # Assuming data is a pointer to a Cell structure
+        legal_moves.append((cell.r, cell.c))
+        print("Cell "+cell.r+" "+cell.c)
+
+        # Move to the next node
+        current_node = current_node.next
+
+    return legal_moves
     
 
 
