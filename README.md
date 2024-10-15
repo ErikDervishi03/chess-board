@@ -13,3 +13,6 @@ make game loop
 make match creation((re)starting a game)
 make turn logic
 drag images
+
+---general---
+mistery display moves bug, all pieces have pawn moves

@@ -1,5 +1,5 @@
 import random
-from wrapper import pyboard, do_move_w
+from wrapper import pyboard, do_move_w, sync_boards
 from utils import get_piece_at
 
 selected_piece_pos = (-1, -1)
@@ -18,6 +18,8 @@ def make_move(move_from, move_to):
     local_piece = pyboard[move_from[0]][move_from[1]]
     pyboard[move_from[0]][move_from[1]] = '.'
     pyboard[move_to[0]][move_to[1]] = local_piece
+    sync_boards()
 
 def get_selected_piece():
+    global selected_piece_pos
     return selected_piece_pos

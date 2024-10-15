@@ -1,1 +1,1 @@
-pleaseList to doList doneList 2 donenode doneAll done
+Entering switch to choose pieceSelected pawn

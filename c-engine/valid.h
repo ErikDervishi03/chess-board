@@ -11,7 +11,7 @@ int isOutOfBounds( cell pos );
 
 int isLegalMove ( BOARD board , move move_ , enum piece piece_ , cell currPos );
 
-List * moveFinder(BoardReceiver boardArray, cell piecePos);
+ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos);
 
 List * pawnLegalMoves ( BOARD board, cell currPos );
 

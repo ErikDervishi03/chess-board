@@ -44,6 +44,9 @@ class Cell(ctypes.Structure):
         else:
             raise TypeError(f"Cannot convert {obj} to Cell")
 
+class ArrayStruct(ctypes.Structure):
+    _fields_ = [("arr", Cell * 27)] # legal move upper-bound
+
 # Types for C functions
 class Node(ctypes.Structure):
     pass  # Forward declaration since Node contains a pointer to itself
@@ -107,7 +110,7 @@ chess_engine = ctypes.CDLL('../sharedC.so')
 chess_engine.do_move.argtypes = [BoardType, Cell, Cell]
 chess_engine.do_move.restype = None
 chess_engine.moveFinder.argtypes = [BoardType, Cell]
-chess_engine.moveFinder.restype = ctypes.POINTER(List)
+chess_engine.moveFinder.restype = ArrayStruct
 
 # do_move wrapper so i can sync the boards
 def do_move_w(pyboard, move_from, move_to):
@@ -118,27 +121,13 @@ def legal_moves_w(pyboard, piecePos):
     print("\nIn legal_moves_w")
     sync_boards()
     result = chess_engine.moveFinder(cBoard, piecePos)
-    print(chess_engine.moveFinder(cBoard, piecePos))
 
     # If result is NULL, return None
     if not result:
         print("Result from moveFinder is NULL.")
         return None
     
-    # Valid result, now access the list
-    #print("List pointer address:", result)
-    #print("List size:", result.contents.size)
-#
-    #current_node = result.contents.head
-    #for i in range(result.contents.size):
-    #    if current_node:
-    #        cell_data = current_node.contents.data.contents
-    #        print(f"Move {i + 1}: Row = {cell_data.r}, Column = {cell_data.c}")
-    #        current_node = current_node.contents.next
-    #    else:
-    #        print("Reached the end of the list.")
-    #        break
-
+    # Valid result
     return result
     
 

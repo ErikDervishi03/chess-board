@@ -8,6 +8,13 @@ int main(){
   BOARD board;
 
   INIT_BOARD(board);
+
+  Node * tmp = pawnLegalMoves(board, (cell){6, 4})->head;
+  printf("mosse legali bPawn da 6-4\n");
+  while(tmp){
+    printf ("%d %d\n", (*(move *)tmp->data).r ,(*(move *)tmp->data).c);
+    tmp = tmp->next;
+  }
   
   return 0;
 

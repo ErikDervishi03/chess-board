@@ -22,6 +22,8 @@
   #define WHITE_PAWN_INITIAL_ROW 1
   #define BLACK_PAWN_INITIAL_ROW 6
 
+
+
   typedef struct node {
 
     void* data;
@@ -45,6 +47,12 @@
     int c ; // COLUMN
 
   } cell;
+
+  typedef struct {
+
+    cell arr[27]; 
+
+} ArrayStruct;
 
   typedef cell move;
 
@@ -86,6 +94,6 @@
 
   typedef int BoardReceiver[64];
 
-  // board [pos] => piece
+  extern BOARD global_board;
 
 #endif

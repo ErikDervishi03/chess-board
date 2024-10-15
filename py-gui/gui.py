@@ -1,7 +1,7 @@
 import pygame
 from chess import make_move, select_piece, get_selected_piece
 from utils import get_square_under_mouse, get_piece_at
-from wrapper import legal_moves_w, pyboard, List, Node
+from wrapper import legal_moves_w, pyboard, List, Node, Cell, ArrayStruct
 
 # Initialize Pygame
 pygame.init()
@@ -12,7 +12,8 @@ SQUARE_SIZE = WIDTH // 8
 PADDING = SQUARE_SIZE / 32 # seems useless but looks bad without this
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Chess Board")
-legal_moves = []
+legal_moves = ()
+b_moves = False
 
 # Define colors (blue theme)
 WHITE = (105, 113, 129)
@@ -35,6 +36,14 @@ piece_images = {
     'n': pygame.transform.scale(pygame.image.load('assets/bKnight.png'), piece_STDSIZE)
 }
 
+def empty_moves():
+    global legal_moves
+    global b_moves
+    for move in legal_moves:
+        move.r = -1
+        move.c = -1
+    b_moves = False
+
 def draw_board():
     """Draw the chessboard with alternating black and white squares."""
     for row in range(8):
@@ -53,33 +62,31 @@ def draw_pieces():
             if piece != '.':  
                 screen.blit(piece_images[piece], ((col * SQUARE_SIZE)+PADDING, (row * SQUARE_SIZE)+PADDING))
 
-#def traverse_list(list_ptr):
-#    # Start at the head of the list
-#    current_node = list_ptr.contents.head
-#
-#    # Traverse the list
-#    while current_node:
-#        # Cast 'data' to the correct type, here assuming it's an int
-#        data_value = ctypes.cast(current_node.contents.data, ctypes.POINTER(ctypes.c_int)).contents.value
-#        print(f"Node data: {data_value}")
-#
-#        # Move to the next node
-#        current_node = current_node.contents.next
-
 def display_moves(row, col):
-    print("\nIn display_moves")
+    print("\nIn display_moves for loc "+str(row)+" "+str(col))
     """Draw the legal moves for a clicked piece"""
     global legal_moves
-    legal_moves = legal_moves_w(pyboard, (row,col))
-    print("legal_moves should not be null right now, ")
+    global b_moves
+    legal_moves = legal_moves_w(pyboard, (row,col)).arr
+    if legal_moves:  # Check if moves are returned
+        for move in legal_moves:
+            print(f"Legal move to: Row {move.r}, Col {move.c}")  # Debug print
+    else:
+        print("No legal moves found.")
+    b_moves = True
     
 def draw_moves():
-    if not legal_moves:
+    global legal_moves
+    global b_moves
+    if b_moves == False:
         return
-    print("made it past first if in draw_moves, ")
+    #print("made it past first if in draw_moves, this is b_moves: "+str(b_moves))
     for move in legal_moves:
-        print("Draw moves drawing\n")
-        row, col = move
+        row = move.r
+        col = move.c
+        #print("Row "+str(row)+" Col "+str(col))
+        if row == -1:
+            continue
         piece = pyboard[row][col]
         
         # Determine circle size based on if it's an enemy piece
@@ -100,6 +107,7 @@ def run_game():
     holdingM1 = False
     dragging = False
     global legal_moves
+    global b_moves
     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
     while running:
         for event in pygame.event.get():
@@ -115,7 +123,7 @@ def run_game():
                     dragging = True
                     select_piece(row, col)
                 else:
-                    legal_moves = []
+                    empty_moves()
             
             if event.type == pygame.MOUSEBUTTONUP:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -123,12 +131,13 @@ def run_game():
                 if dragging == True:
                     dragging = False
                     if (row, col) == get_square_under_mouse():
+                        print("did not move piece")
                         #reset image to square if dragging(might not be necessary)
                         continue
                     row, col = get_square_under_mouse()
                     move_from = get_selected_piece()
                     make_move(move_from, (row, col))
-                    legal_moves = []
+                    empty_moves()
 
         # Draw the chessboard image
         draw_board()

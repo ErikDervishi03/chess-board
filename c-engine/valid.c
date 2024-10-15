@@ -14,6 +14,29 @@ int isOutOfBounds(cell pos) {
     return (pos.r < 0 || pos.r >= ROWS || pos.c < 0 || pos.c >= COLUMNS);
 }
 
+ArrayStruct create_cell_array(List *moves) {
+    ArrayStruct arrayStruct;
+    int i = 0;
+
+    if(moves != NULL){
+        Node *current = moves->head;  
+
+        while (current != NULL && i < 27) {
+            cell *move = (cell *)current->data; 
+            arrayStruct.arr[i].r = move->r;
+            arrayStruct.arr[i].c = move->c;
+            current = current->next;  
+            i++;
+        }
+    }
+
+    for (; i < 27; i++) {
+        arrayStruct.arr[i].r = -1;
+        arrayStruct.arr[i].c = -1;
+    }
+    return arrayStruct;
+}
+
 int isLegalMove ( BOARD board , move move_ , enum piece piece_ , cell currPos ) {
     int* move_ptr = (int*)&move_;
     switch(piece_){
@@ -62,73 +85,76 @@ void add_new_move (List * dest, move src){
         }
 }
 
-List * moveFinder(BoardReceiver boardArray, cell piecePos){//GIVE UP ON RETURNING LIST, CREATE NEW TYPE EASIER TO CONVERT
+ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
     FILE *f = fopen("../testMoves.txt", "w");//deletes old content
-    fprintf(f, "please");
     BOARD board;
-    INIT_BOARD(board);
-    convert_board(boardArray);
-    fprintf(f, "List to do");
+    convert_board(boardArray); //10 hours of my life have died on this line of code
+    memcpy(board, global_board, sizeof(global_board));
+    printb(board);
     List* moves = malloc(sizeof(List)); // Allocate memory for List
-    fprintf(f, "List done");
     moves->size = 0; // Initialize size
     moves->head = NULL;
-    List* emptyList = malloc(sizeof(List));
-    fprintf(f, "List 2 done");
-    Node* emptyNode = malloc(sizeof(Node));
-    fprintf(f, "node done");
-    cell basecell;
-    basecell.r = 2;
-    basecell.c = 2;
-    emptyNode->data = (void*)basecell;
-    emptyNode->next = NULL;
-    emptyList->size = 1; // Initialize size
-    emptyList->head = emptyNode;
-    fprintf(f, "All done");
-    fclose(f);
+    ArrayStruct arrayStruct = create_cell_array(NULL);
 
+    fprintf(f, "Entering switch to choose piece");
     switch(board[piecePos.r][piecePos.c]){
         case B_PAWN: 
         case W_PAWN:
+            fprintf(f, "Selected pawn");
             moves = pawnLegalMoves(board, piecePos);
-            //moves work officially, up to this point no problems
-            if(moves == NULL){
-                //fprintf(f, "Gave back null");
-                return emptyList;
-            }
-            return moves;
+            arrayStruct = create_cell_array(moves);
+            return arrayStruct;
             break;
 
-        /*case B_KNIGHT:
+        case B_KNIGHT:
         case W_KNIGHT:
-            return knightLegalMoves(board, piecePos);
+            fprintf(f, "Selected knight");
+            moves = pawnLegalMoves(board, piecePos);
+            arrayStruct = create_cell_array(moves);
+            return arrayStruct;
             break;
         
         case B_BISHOP:
         case W_BISHOP:
-            return bishopLegalMoves(board, piecePos);
+            fprintf(f, "Selected bishop");
+            moves = pawnLegalMoves(board, piecePos);
+            arrayStruct = create_cell_array(moves);
+            return arrayStruct;
             break;
         
         case B_ROOK:
         case W_ROOK:
-            return rookLegalMoves(board, piecePos);
+            fprintf(f, "Selected rook");
+            moves = pawnLegalMoves(board, piecePos);
+            arrayStruct = create_cell_array(moves);
+            return arrayStruct;           
             break;
         
         case B_QUEEN:
         case W_QUEEN:
-            return queenLegalMoves(board, piecePos);
+            fprintf(f, "Selected queen");
+            moves = pawnLegalMoves(board, piecePos);
+            arrayStruct = create_cell_array(moves);
+            for(int i = 0; i < 27; i++){
+                fprintf(f, "%d %d\n", arrayStruct.arr[i].r, arrayStruct.arr[i].c);
+            }
+            return arrayStruct;            
             break;
         
         case B_KING:
         case W_KING:
-            return kingLegalMoves(board, piecePos);
+            fprintf(f, "Selected king");
+            moves = pawnLegalMoves(board, piecePos);
+            arrayStruct = create_cell_array(moves);
+            return arrayStruct;           
             break;
-*/
+
         default:
-            return emptyList;
+            fprintf(f, "Unrecognized piece");
+            return arrayStruct;
             break;
     }
-    //fclose(f);
+    fclose(f);
 }
 
 List * pawnLegalMoves(BOARD board, cell currPos) {
