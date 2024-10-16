@@ -96,7 +96,7 @@ ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
     moves->head = NULL;
     ArrayStruct arrayStruct = create_cell_array(NULL);
 
-    fprintf(f, "Entering switch to choose piece");
+    fprintf(f, "Entering switch to choose piece, current piece %d", board[piecePos.r][piecePos.c]);
     switch(board[piecePos.r][piecePos.c]){
         case B_PAWN: 
         case W_PAWN:
@@ -109,7 +109,7 @@ ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
         case B_KNIGHT:
         case W_KNIGHT:
             fprintf(f, "Selected knight");
-            moves = pawnLegalMoves(board, piecePos);
+            moves = knightLegalMoves(board, piecePos);
             arrayStruct = create_cell_array(moves);
             return arrayStruct;
             break;
@@ -117,7 +117,7 @@ ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
         case B_BISHOP:
         case W_BISHOP:
             fprintf(f, "Selected bishop");
-            moves = pawnLegalMoves(board, piecePos);
+            moves = bishopLegalMoves(board, piecePos);
             arrayStruct = create_cell_array(moves);
             return arrayStruct;
             break;
@@ -125,7 +125,7 @@ ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
         case B_ROOK:
         case W_ROOK:
             fprintf(f, "Selected rook");
-            moves = pawnLegalMoves(board, piecePos);
+            moves = rookLegalMoves(board, piecePos);
             arrayStruct = create_cell_array(moves);
             return arrayStruct;           
             break;
@@ -133,7 +133,7 @@ ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
         case B_QUEEN:
         case W_QUEEN:
             fprintf(f, "Selected queen");
-            moves = pawnLegalMoves(board, piecePos);
+            moves = queenLegalMoves(board, piecePos);
             arrayStruct = create_cell_array(moves);
             for(int i = 0; i < 27; i++){
                 fprintf(f, "%d %d\n", arrayStruct.arr[i].r, arrayStruct.arr[i].c);
@@ -144,7 +144,7 @@ ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
         case B_KING:
         case W_KING:
             fprintf(f, "Selected king");
-            moves = pawnLegalMoves(board, piecePos);
+            moves = kingLegalMoves(board, piecePos);
             arrayStruct = create_cell_array(moves);
             return arrayStruct;           
             break;

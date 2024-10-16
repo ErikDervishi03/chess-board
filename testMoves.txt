@@ -1,1 +1,28 @@
-Entering switch to choose pieceSelected pawn
+Entering switch to choose piece, current piece 4Selected queen-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+-1 -1
+
