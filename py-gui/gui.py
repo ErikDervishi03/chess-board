@@ -7,17 +7,20 @@ from wrapper import legal_moves_w, pyboard, List, Node, Cell, ArrayStruct
 pygame.init()
 
 # Define board parameters
-WIDTH, HEIGHT = 640, 640
-SQUARE_SIZE = WIDTH // 8
+WIDTH, HEIGHT = 800, 640
+SQUARE_SIZE = WIDTH // 10 # Extra space is 2 squares wide
 PADDING = SQUARE_SIZE / 32 # seems useless but looks bad without this
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Chess Board")
+pygame.font.init()
+my_font = pygame.freetype.Font(None, 20)
 legal_moves = ()
 b_moves = False
 
 # Define colors (blue theme)
 WHITE = (105, 113, 129)
 BLACK = (39, 45, 56)
+BUTTON = (255, 255, 255)
 
 # Define Assets
 piece_STDSIZE = (75 , 75)
@@ -43,6 +46,12 @@ def empty_moves():
         move.r = -1
         move.c = -1
     b_moves = False
+
+def draw_buttons():
+    """Draw the buttons to the side of the screen."""
+    pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 0.5 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
+    my_font.render_to(screen, (8.6 * SQUARE_SIZE, 0.6 * SQUARE_SIZE), "+Game", (0, 0, 0))
+
 
 def draw_board():
     """Draw the chessboard with alternating black and white squares."""
@@ -139,9 +148,11 @@ def run_game():
                     make_move(move_from, (row, col))
                     empty_moves()
 
+        
+
         # Draw the chessboard image
         draw_board()
-
+        draw_buttons()
         # Draw the pieces on top of the board
         draw_pieces()
 
