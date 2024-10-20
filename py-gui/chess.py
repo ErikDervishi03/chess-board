@@ -13,7 +13,17 @@ def select_piece(row, col):
     selected_piece_pos = (row, col)
     display_moves(selected_piece_pos[0], selected_piece_pos[1])
 
+def is_legal_move(move_to):
+    from gui import legal_moves
+    for move in legal_moves:
+        if move.r == move_to[0] and move.c == move_to[1]:
+            return True
+    return False
+
 def make_move(move_from, move_to):
+    if not is_legal_move(move_to):
+        print("ILLEGAL MOVE")
+        return
     do_move_w(pyboard, move_from, move_to) # execute on c before modifying pyboard
     local_piece = pyboard[move_from[0]][move_from[1]]
     pyboard[move_from[0]][move_from[1]] = '.'

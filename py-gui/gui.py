@@ -16,6 +16,7 @@ pygame.font.init()
 my_font = pygame.freetype.Font(None, 20)
 legal_moves = ()
 b_moves = False
+flipped = False # Black POV
 
 # Define colors (blue theme)
 WHITE = (105, 113, 129)
@@ -49,8 +50,11 @@ def empty_moves():
 
 def draw_buttons():
     """Draw the buttons to the side of the screen."""
-    pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 0.5 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
-    my_font.render_to(screen, (8.6 * SQUARE_SIZE, 0.6 * SQUARE_SIZE), "Reset", (0, 0, 0))
+    pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 0.25 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
+    my_font.render_to(screen, (8.6 * SQUARE_SIZE, 0.4 * SQUARE_SIZE), "Reset", (0, 0, 0))
+
+    pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 1.25 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
+    my_font.render_to(screen, (8.6 * SQUARE_SIZE, 1.4 * SQUARE_SIZE), "Flip", (0, 0, 0))
 
 
 def draw_board():
@@ -68,7 +72,7 @@ def draw_pieces():
     for row in range(8):
         for col in range(8):
             piece = get_piece_at(row, col)
-            if piece != '.':  
+            if piece is not None and piece != '.':  
                 screen.blit(piece_images[piece], ((col * SQUARE_SIZE)+PADDING, (row * SQUARE_SIZE)+PADDING))
 
 def display_moves(row, col):
@@ -77,11 +81,6 @@ def display_moves(row, col):
     global legal_moves
     global b_moves
     legal_moves = legal_moves_w(pyboard, (row,col)).arr
-    if legal_moves:  # Check if moves are returned
-        for move in legal_moves:
-            print(f"Legal move to: Row {move.r}, Col {move.c}")  # Debug print
-    else:
-        print("No legal moves found.")
     b_moves = True
     
 def draw_moves():
@@ -113,7 +112,6 @@ def draw_moves():
 
 def run_game():
     running = True
-    holdingM1 = False
     dragging = False
     global legal_moves
     global b_moves
@@ -124,7 +122,6 @@ def run_game():
                 running = False
             
             if event.type == pygame.MOUSEBUTTONDOWN:
-                holdingM1 = True
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 row, col = get_square_under_mouse()
                 if (row == -1) and (col == -1):
@@ -135,11 +132,12 @@ def run_game():
                         dragging = True
                         select_piece(row, col)
                     else:
+                        move_from = get_selected_piece()
+                        make_move(move_from, (row,col))
                         empty_moves()
             
             if event.type == pygame.MOUSEBUTTONUP:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                holdingM1 = False
                 if dragging == True:
                     dragging = False
                     if (row, col) == get_square_under_mouse():

@@ -11,4 +11,6 @@ def get_square_under_mouse():
     return row, col
 
 def get_piece_at(row, col):
-    return pyboard[row][col]  
+    if (row in range(0,8)) and (col in range(0,8)):
+        return pyboard[row][col]
+    return None
