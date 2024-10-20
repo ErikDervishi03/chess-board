@@ -1,6 +1,7 @@
 # This file interfaces with the c engine. It defines types we need for calling c functions
 
 import ctypes 
+import copy
 from enum import Enum
 
 ROWS = 8
@@ -75,7 +76,7 @@ cBoard = BoardType(
     B_ROOK, B_KNIGHT, B_BISHOP, B_QUEEN, B_KING, B_BISHOP, B_KNIGHT, B_ROOK
 )
 
-pyboard = [
+pyboard_def = [
     ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
     ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
     ['.', '.', '.', '.', '.', '.', '.', '.'],
@@ -85,6 +86,8 @@ pyboard = [
     ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
     ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
 ] # We print row first, then column. Rows and columns are 0-indexed, so top left is 0-0, bottom right is 7-7. Upper case is white.
+
+pyboard = copy.deepcopy(pyboard_def)
 
 # We use pyboard for python stuff and then sync cboard to it for c correspondence
 def sync_boards():
@@ -129,6 +132,9 @@ def legal_moves_w(pyboard, piecePos):
     
     # Valid result
     return result
+
+def reset_boards():
+    pyboard[:] = copy.deepcopy(pyboard_def) # [:] means i change pyboard in place, not changing the reference
     
 
 

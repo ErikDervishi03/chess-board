@@ -1,7 +1,7 @@
 import pygame
 from chess import make_move, select_piece, get_selected_piece
 from utils import get_square_under_mouse, get_piece_at
-from wrapper import legal_moves_w, pyboard, List, Node, Cell, ArrayStruct
+from wrapper import legal_moves_w, pyboard, List, Node, Cell, ArrayStruct, reset_boards
 
 # Initialize Pygame
 pygame.init()
@@ -50,7 +50,7 @@ def empty_moves():
 def draw_buttons():
     """Draw the buttons to the side of the screen."""
     pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 0.5 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
-    my_font.render_to(screen, (8.6 * SQUARE_SIZE, 0.6 * SQUARE_SIZE), "+Game", (0, 0, 0))
+    my_font.render_to(screen, (8.6 * SQUARE_SIZE, 0.6 * SQUARE_SIZE), "Reset", (0, 0, 0))
 
 
 def draw_board():
@@ -127,12 +127,15 @@ def run_game():
                 holdingM1 = True
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 row, col = get_square_under_mouse()
-                piece = get_piece_at(row, col)
-                if piece != '.':
-                    dragging = True
-                    select_piece(row, col)
+                if (row == -1) and (col == -1):
+                    reset_boards()
                 else:
-                    empty_moves()
+                    piece = get_piece_at(row, col)
+                    if piece != '.':
+                        dragging = True
+                        select_piece(row, col)
+                    else:
+                        empty_moves()
             
             if event.type == pygame.MOUSEBUTTONUP:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -148,11 +151,11 @@ def run_game():
                     make_move(move_from, (row, col))
                     empty_moves()
 
-        
+        draw_buttons()
 
         # Draw the chessboard image
         draw_board()
-        draw_buttons()
+        
         # Draw the pieces on top of the board
         draw_pieces()
 
