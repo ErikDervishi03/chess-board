@@ -1,1 +1,1 @@
-Entering switch to choose piece, current piece 0Selected pawn
+Entering switch to choose piece, current piece 12Unrecognized piece

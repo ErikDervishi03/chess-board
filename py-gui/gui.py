@@ -17,6 +17,7 @@ my_font = pygame.freetype.Font(None, 20)
 legal_moves = ()
 b_moves = False
 flipped = False # Black POV
+turn = 'White'
 
 # Define colors (blue theme)
 WHITE = (105, 113, 129)
@@ -48,6 +49,17 @@ def empty_moves():
         move.c = -1
     b_moves = False
 
+def flip_board():
+    global flipped
+    flipped = not flipped
+
+def is_turn(piece):
+    if turn == "White":
+        return piece.isupper()
+    elif turn == "Black":
+        return piece.islower()
+    return False
+
 def draw_buttons():
     """Draw the buttons to the side of the screen."""
     pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 0.25 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
@@ -56,15 +68,24 @@ def draw_buttons():
     pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 1.25 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
     my_font.render_to(screen, (8.6 * SQUARE_SIZE, 1.4 * SQUARE_SIZE), "Flip", (0, 0, 0))
 
+    my_font.render_to(screen, (8.6 * SQUARE_SIZE, 2.4 * SQUARE_SIZE), turn, (255, 255, 255))
+
 
 def draw_board():
     """Draw the chessboard with alternating black and white squares."""
+    global flipped
     for row in range(8):
         for col in range(8):
             if (row + col) % 2 == 0:
-                color = WHITE
+                if(flipped):
+                    color = BLACK
+                else:
+                    color = WHITE
             else:
-                color = BLACK
+                if(flipped):
+                    color = WHITE
+                else:
+                    color = BLACK
             pygame.draw.rect(screen, color, (col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
 def draw_pieces():
@@ -72,8 +93,12 @@ def draw_pieces():
     for row in range(8):
         for col in range(8):
             piece = get_piece_at(row, col)
+            row_l, col_l = row, col
+            if flipped:
+                row_l = 7 - row
+                col_l = 7 - col
             if piece is not None and piece != '.':  
-                screen.blit(piece_images[piece], ((col * SQUARE_SIZE)+PADDING, (row * SQUARE_SIZE)+PADDING))
+                screen.blit(piece_images[piece], ((col_l * SQUARE_SIZE)+PADDING, (row_l * SQUARE_SIZE)+PADDING))
 
 def display_moves(row, col):
     print("\nIn display_moves for loc "+str(row)+" "+str(col))
@@ -92,21 +117,25 @@ def draw_moves():
     for move in legal_moves:
         row = move.r
         col = move.c
-        #print("Row "+str(row)+" Col "+str(col))
         if row == -1:
             continue
         piece = pyboard[row][col]
+
+        row_l, col_l = row, col
+        if flipped:
+            row_l = 7 - row
+            col_l = 7 - col
         
         # Determine circle size based on if it's an enemy piece
         if piece == '.':
             # Draw small transparent circle for an empty square
             pygame.draw.circle(screen, (255,255,255), 
-                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
+                               (col_l * SQUARE_SIZE + SQUARE_SIZE // 2, row_l * SQUARE_SIZE + SQUARE_SIZE // 2), 
                                SQUARE_SIZE // 5)
         else:
             # Draw a larger red circle for an enemy piece
             pygame.draw.circle(screen, (255,255,255), 
-                               (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 
+                               (col_l * SQUARE_SIZE + SQUARE_SIZE // 2, row_l * SQUARE_SIZE + SQUARE_SIZE // 2), 
                                SQUARE_SIZE // 2)
 
 
@@ -126,9 +155,14 @@ def run_game():
                 row, col = get_square_under_mouse()
                 if (row == -1) and (col == -1):
                     reset_boards()
+                if (row == -2) and (col == -2):
+                    flip_board()
                 else:
                     piece = get_piece_at(row, col)
+                    if not is_turn(piece):
+                        continue
                     if piece != '.':
+                        print("Grabbed valid piece")
                         dragging = True
                         select_piece(row, col)
                     else:

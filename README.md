@@ -6,7 +6,7 @@ add support for pgn files
 begin the engine
 
 ---Py---
-flip board button
+change turn on move made
 make game loop
 make match creation((re)starting a game)
 make turn logic
