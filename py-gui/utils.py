@@ -13,7 +13,6 @@ def get_square_under_mouse():
     else:
         if flipped:
             row = 7 - row
-            col = 7 - col
     return row, col
 
 def get_piece_at(row, col):

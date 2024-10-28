@@ -23,12 +23,13 @@ def is_legal_move(move_to):
 def make_move(move_from, move_to):
     if not is_legal_move(move_to):
         print("ILLEGAL MOVE")
-        return
+        return False
     do_move_w(pyboard, move_from, move_to) # execute on c before modifying pyboard
     local_piece = pyboard[move_from[0]][move_from[1]]
     pyboard[move_from[0]][move_from[1]] = '.'
     pyboard[move_to[0]][move_to[1]] = local_piece
     sync_boards()
+    return True
 
 def get_selected_piece():
     global selected_piece_pos

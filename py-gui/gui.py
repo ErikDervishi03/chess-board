@@ -53,12 +53,20 @@ def flip_board():
     global flipped
     flipped = not flipped
 
+def change_turn():
+    global turn
+    if turn == 'White':
+        turn = 'Black'
+    else:
+        turn = 'White'
+
 def is_turn(piece):
+    if not piece:
+        return False 
     if turn == "White":
         return piece.isupper()
     elif turn == "Black":
         return piece.islower()
-    return False
 
 def draw_buttons():
     """Draw the buttons to the side of the screen."""
@@ -68,6 +76,7 @@ def draw_buttons():
     pygame.draw.rect(screen, BUTTON, (8.5 * SQUARE_SIZE, 1.25 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
     my_font.render_to(screen, (8.6 * SQUARE_SIZE, 1.4 * SQUARE_SIZE), "Flip", (0, 0, 0))
 
+    pygame.draw.rect(screen, (0,0,0), (8.6 * SQUARE_SIZE, 2.4 * SQUARE_SIZE, SQUARE_SIZE, 0.5 * SQUARE_SIZE))
     my_font.render_to(screen, (8.6 * SQUARE_SIZE, 2.4 * SQUARE_SIZE), turn, (255, 255, 255))
 
 
@@ -78,14 +87,14 @@ def draw_board():
         for col in range(8):
             if (row + col) % 2 == 0:
                 if(flipped):
-                    color = BLACK
-                else:
                     color = WHITE
+                else:
+                    color = BLACK
             else:
                 if(flipped):
-                    color = WHITE
-                else:
                     color = BLACK
+                else:
+                    color = WHITE
             pygame.draw.rect(screen, color, (col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
 def draw_pieces():
@@ -96,7 +105,6 @@ def draw_pieces():
             row_l, col_l = row, col
             if flipped:
                 row_l = 7 - row
-                col_l = 7 - col
             if piece is not None and piece != '.':  
                 screen.blit(piece_images[piece], ((col_l * SQUARE_SIZE)+PADDING, (row_l * SQUARE_SIZE)+PADDING))
 
@@ -124,7 +132,6 @@ def draw_moves():
         row_l, col_l = row, col
         if flipped:
             row_l = 7 - row
-            col_l = 7 - col
         
         # Determine circle size based on if it's an enemy piece
         if piece == '.':
@@ -144,6 +151,7 @@ def run_game():
     dragging = False
     global legal_moves
     global b_moves
+    global turn
     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
     while running:
         for event in pygame.event.get():
@@ -155,19 +163,25 @@ def run_game():
                 row, col = get_square_under_mouse()
                 if (row == -1) and (col == -1):
                     reset_boards()
+                    turn = 'White'
                 if (row == -2) and (col == -2):
                     flip_board()
                 else:
                     piece = get_piece_at(row, col)
-                    if not is_turn(piece):
-                        continue
+                    move_from = get_selected_piece()
                     if piece != '.':
+                        if not is_turn(piece):
+                            if make_move(move_from, (row,col)):
+                                change_turn()
+                            empty_moves()
+                            continue
                         print("Grabbed valid piece")
                         dragging = True
                         select_piece(row, col)
                     else:
-                        move_from = get_selected_piece()
-                        make_move(move_from, (row,col))
+                        print("here")
+                        if make_move(move_from, (row,col)):
+                            change_turn()
                         empty_moves()
             
             if event.type == pygame.MOUSEBUTTONUP:
@@ -181,6 +195,7 @@ def run_game():
                     row, col = get_square_under_mouse()
                     move_from = get_selected_piece()
                     make_move(move_from, (row, col))
+                    change_turn()
                     empty_moves()
 
         draw_buttons()
