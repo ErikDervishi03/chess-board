@@ -72,7 +72,10 @@
     W_QUEEN ,  
     W_KING  ,
 
-    EMPTY
+    EMPTY,
+
+    B_EN_PASSANT,
+    W_EN_PASSANT
 
   };
 

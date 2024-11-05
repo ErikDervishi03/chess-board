@@ -103,6 +103,11 @@ ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
             fprintf(f, "Selected pawn");
             moves = pawnLegalMoves(board, piecePos);
             arrayStruct = create_cell_array(moves);
+            int i = 0;
+            while(arrayStruct.arr[i].r != -1){
+                fprintf(f, "\nMove 1: %d %d", arrayStruct.arr[i].r, arrayStruct.arr[i].c); //TEST THIS
+                i++;
+            }
             return arrayStruct;
             break;
 

@@ -65,6 +65,9 @@ void do_move ( BoardReceiver boardArray , move from, move to ){
 
         BOARD board;
         convert_board(boardArray);
+        move enPass;
+        enPass.r = -1;
+        enPass.c = -1;
 
         for (int i = 0; i < ROWS; i++){
 
@@ -72,15 +75,38 @@ void do_move ( BoardReceiver boardArray , move from, move to ){
 
                         board[i][j] = global_board[i][j];
 
+                        if(board[i][j] == W_EN_PASSANT || board[i][j] == B_EN_PASSANT){ enPass.r = i; enPass.c = j;}
+
                 }
 
         }
 
         if( !isOutOfBounds( to ) ){
 
-                board[to.r][to.c] = board[from.r][from.c];
+                board[to.r][to.c] = board[from.r][from.c];//Make the move
+                board[from.r][from.c] = EMPTY; 
 
-                board[from.r][from.c] = EMPTY;
+                if(enPass.r != -1 && enPass.c != -1){
+
+                        if(to.r == enPass.r && to.c == enPass.c){ //Delete taken pawn if move takes en passant
+                        
+                                if(to.r == 2){ board[3][from.c] = EMPTY; }
+                                if(to.r == 5){ board[4][from.c] = EMPTY; }
+
+                        }
+
+                        if(board[enPass.r][enPass.c] == W_EN_PASSANT || board[enPass.r][enPass.c] == B_EN_PASSANT){//Remove expired en passant targets
+                                board[enPass.r][enPass.c] = EMPTY;
+                        }
+
+                }
+
+                if(board[to.r][to.c] == B_PAWN || board[to.r][to.c] == W_PAWN){ //Create En Passant target if move is a pawn double-step
+
+                        if(from.r == 1 && to.r == 3){ board[2][from.c] = W_EN_PASSANT; }
+                        if(from.r == 6 && to.r == 4){ board[5][from.c] = B_EN_PASSANT; }
+
+                }
 
         }
         
@@ -133,6 +159,12 @@ void printb (BOARD board) {
                                         case W_KING:
                                                 fprintf(f, "K ");
                                                 break;  
+                                        case B_EN_PASSANT:
+                                                fprintf(f, "e ");
+                                                break;
+                                        case W_EN_PASSANT:
+                                                fprintf(f, "E ");
+                                                break;
                                         default:
                                                 fprintf(f, "X ");
                                 }
