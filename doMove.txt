@@ -1,0 +1,6 @@
+entered domove
+jugded as not null move
+entering board copy for
+ENPASSANT present on the board
+ENPASSANT present on the board
+ENPASSANT present on the board

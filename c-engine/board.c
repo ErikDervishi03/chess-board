@@ -62,20 +62,26 @@ void convert_board( BoardReceiver boardArray ){
 }
 
 void do_move ( BoardReceiver boardArray , move from, move to ){
-
+        FILE *f = fopen("../doMove.txt", "w");
+        fprintf(f, "entered domove\n");
         BOARD board;
         convert_board(boardArray);
+        if(from.r == to.r && from.c == to.c){
+                fclose(f);
+                return;
+        }
+        fprintf(f, "jugded as not null move\n");
         move enPass;
         enPass.r = -1;
         enPass.c = -1;
-
+        fprintf(f, "entering board copy for\n");
         for (int i = 0; i < ROWS; i++){
 
                 for (int j = 0; j < COLUMNS; j++){
 
                         board[i][j] = global_board[i][j];
 
-                        if(board[i][j] == W_EN_PASSANT || board[i][j] == B_EN_PASSANT){ enPass.r = i; enPass.c = j;}
+                        if(board[i][j] == W_EN_PASSANT || board[i][j] == B_EN_PASSANT){ enPass.r = i; enPass.c = j; fprintf(f, "ENPASSANT present on the board\n");}
 
                 }
 
@@ -92,11 +98,12 @@ void do_move ( BoardReceiver boardArray , move from, move to ){
                         
                                 if(to.r == 2){ board[3][from.c] = EMPTY; }
                                 if(to.r == 5){ board[4][from.c] = EMPTY; }
-
+                                
                         }
 
                         if(board[enPass.r][enPass.c] == W_EN_PASSANT || board[enPass.r][enPass.c] == B_EN_PASSANT){//Remove expired en passant targets
                                 board[enPass.r][enPass.c] = EMPTY;
+                                fprintf(f, "enpassant expired");
                         }
 
                 }
@@ -109,7 +116,7 @@ void do_move ( BoardReceiver boardArray , move from, move to ){
                 }
 
         }
-        
+        fclose(f);
         printb(board);
 }
 

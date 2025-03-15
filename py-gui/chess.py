@@ -24,10 +24,18 @@ def make_move(move_from, move_to):
     if not is_legal_move(move_to):
         print("ILLEGAL MOVE")
         return False
+
     do_move_w(pyboard, move_from, move_to) # execute on c before modifying pyboard
+
     local_piece = pyboard[move_from[0]][move_from[1]]
-    pyboard[move_from[0]][move_from[1]] = '.'
     pyboard[move_to[0]][move_to[1]] = local_piece
+    pyboard[move_from[0]][move_from[1]] = '.'
+    if(local_piece == 'P' or local_piece == 'p'):
+        if(move_from[0] == 1 and move_to[0] == 3):
+            pyboard[2][move_from[1]] = 'E'
+        if(move_from[0] == 6 and move_to[0] == 4):
+            pyboard[5][move_from[1]] = 'e'
+
     sync_boards()
     return True
 

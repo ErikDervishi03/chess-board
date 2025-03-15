@@ -88,7 +88,7 @@ void add_new_move (List * dest, move src){
 ArrayStruct moveFinder(BoardReceiver boardArray, cell piecePos){
     FILE *f = fopen("../testMoves.txt", "w");//deletes old content
     BOARD board;
-    convert_board(boardArray); //10 hours of my life have died on this line of code
+    convert_board(boardArray); //10 hours of my life have died on this line of code; WHY??? i forgot
     memcpy(board, global_board, sizeof(global_board));
     printb(board);
     List* moves = malloc(sizeof(List)); // Allocate memory for List
@@ -189,7 +189,8 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
     // Left diagonal eat
     move leftDiagonal = {currPos.r + inc, currPos.c + inc};
     if (!isOutOfBounds(leftDiagonal) && 
-        areOppositeColor(board[leftDiagonal.r][leftDiagonal.c], currPawn)) {
+        (areOppositeColor(board[leftDiagonal.r][leftDiagonal.c], currPawn) || 
+        (board[leftDiagonal.r][leftDiagonal.c] == B_EN_PASSANT || board[leftDiagonal.r][leftDiagonal.c] == W_EN_PASSANT))) {
 
         add_new_move(legalMoves, leftDiagonal);
 
@@ -199,7 +200,8 @@ List * pawnLegalMoves(BOARD board, cell currPos) {
     // Right diagonal eat
     move rightDiagonal = {currPos.r + inc, currPos.c - inc};
     if (!isOutOfBounds(rightDiagonal) && 
-        areOppositeColor(board[rightDiagonal.r][rightDiagonal.c], currPawn)) {
+        areOppositeColor(board[rightDiagonal.r][rightDiagonal.c], currPawn) || 
+        (board[rightDiagonal.r][rightDiagonal.c] == B_EN_PASSANT || board[rightDiagonal.r][rightDiagonal.c] == W_EN_PASSANT)) {
         add_new_move(legalMoves, rightDiagonal);
     }
 

@@ -30,6 +30,8 @@ W_ROOK = 9
 W_QUEEN = 10
 W_KING = 11
 EMPTY = 12
+B_ENPASSANT = 13
+W_ENPASSANT = 14
 
 class Cell(ctypes.Structure):
     _fields_ = [("r", ctypes.c_int), ("c", ctypes.c_int)]
@@ -89,16 +91,16 @@ pyboard_def = [
 
 pyboard = copy.deepcopy(pyboard_def)
 
-# We use pyboard for python stuff and then sync cboard to it for c correspondence
-def sync_boards():
-    piece_map = {
+piece_map = {
         'R': W_ROOK,    'N': W_KNIGHT, 'B': W_BISHOP,
         'Q': W_QUEEN,   'K': W_KING,   'P': W_PAWN,
         'r': B_ROOK,    'n': B_KNIGHT, 'b': B_BISHOP,
         'q': B_QUEEN,   'k': B_KING,   'p': B_PAWN,
-        '.': EMPTY
+        '.': EMPTY,     'E': W_ENPASSANT, 'e': B_ENPASSANT
     }
 
+# We use pyboard for python stuff and then sync cboard to it for c correspondence
+def sync_boards():
     for row in range(ROWS):
         for col in range(COLUMNS):
             piece_char = pyboard[row][col]

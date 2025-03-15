@@ -8,8 +8,8 @@
 #include <stdio.h>
 
 #define INIT_BOARD(board) memcpy(board, DEFAULT_BOARD, sizeof(BOARD))
-#define isBlack(_piece) (_piece>=0 && _piece<=5 || _piece==13)
-#define isWhite(_piece) (_piece>=6 && _piece<=11 || _piece==14)
+#define isBlack(_piece) (_piece>=0 && _piece<=5)
+#define isWhite(_piece) (_piece>=6 && _piece<=11)
 
 extern const BOARD DEFAULT_BOARD ;
 

@@ -105,7 +105,7 @@ def draw_pieces():
             row_l, col_l = row, col
             if flipped:
                 row_l = 7 - row
-            if piece is not None and piece != '.':  
+            if piece is not None and piece != '.' and piece != 'e' and piece != 'E':  
                 screen.blit(piece_images[piece], ((col_l * SQUARE_SIZE)+PADDING, (row_l * SQUARE_SIZE)+PADDING))
 
 def display_moves(row, col):
@@ -147,29 +147,39 @@ def draw_moves():
 
 
 def run_game():
+    #Initialization
     running = True
     dragging = False
     global legal_moves
     global b_moves
     global turn
     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+    #-----GAME LOOP-----#
     while running:
+
+        #-----EVENT HANDLING-----#
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+
+            if event.type == pygame.QUIT:       #QUIT
                 running = False
             
+            #-----MOUSEDOWN-----#
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 row, col = get_square_under_mouse()
-                if (row == -1) and (col == -1):
+
+                if (row == -1) and (col == -1):     #RESET BUTTON
                     reset_boards()
                     turn = 'White'
-                if (row == -2) and (col == -2):
+                if (row == -2) and (col == -2):     #FLIP BUTTON
                     flip_board()
-                else:
+
+                else:   #BOARD CLICKED
                     piece = get_piece_at(row, col)
                     move_from = get_selected_piece()
-                    if piece != '.':
+
+                    if piece != '.':                
                         if not is_turn(piece):
                             if make_move(move_from, (row,col)):
                                 change_turn()
@@ -179,11 +189,11 @@ def run_game():
                         dragging = True
                         select_piece(row, col)
                     else:
-                        print("here")
                         if make_move(move_from, (row,col)):
                             change_turn()
                         empty_moves()
-            
+
+            #-----MOUSEUP-----#
             if event.type == pygame.MOUSEBUTTONUP:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 if dragging == True:
@@ -194,8 +204,8 @@ def run_game():
                         continue
                     row, col = get_square_under_mouse()
                     move_from = get_selected_piece()
-                    make_move(move_from, (row, col))
-                    change_turn()
+                    if(make_move(move_from, (row, col))):
+                        change_turn()
                     empty_moves()
 
         draw_buttons()
